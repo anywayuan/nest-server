@@ -13,24 +13,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>(); // 获取请求上下文中的 response对象
     const status = exception.getStatus(); // 获取异常状态码
 
-    // if (exception instanceof HttpException) {
-    //   const exceptionResponse = exception.getResponse();
-    //   let message = (exceptionResponse as any).message;
-    //   if (
-    //     Array.isArray(message) &&
-    //     message.length > 0 &&
-    //     message[0].constraints
-    //   ) {
-    //     message = Object.values(message[0].constraints)[0] as string;
-    //   }
-    //   response.status(status).json({
-    //     data: {},
-    //     code: -1,
-    //     message: message[0],
-    //   });
-    //   return;
-    // }
-
     // 设置错误信息
     const msg = exception.message
       ? exception.message

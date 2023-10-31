@@ -17,8 +17,7 @@ import envConfig from '../config/env';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         type: 'mysql', // 数据库类型
-        autoLoadEntities: true,
-        // entities: [PostsEntity], // 数据表实体
+        autoLoadEntities: true, // 自动加载实体
         host: configService.get('DB_HOST'), // 主机，默认为localhost
         port: configService.get<number>('DB_PORT'),
         username: configService.get('DB_USER'),
