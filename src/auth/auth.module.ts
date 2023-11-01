@@ -7,7 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
 const jwtModule = JwtModule.register({
-  secret: 'suibianshenme',
+  secret: 'yuanaigclound', // TODO: 写在全局配置文件中
   signOptions: { expiresIn: '4h' },
 });
 
