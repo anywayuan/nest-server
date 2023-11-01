@@ -1,12 +1,13 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { PostsEntity } from './posts.entity';
+import { PostsEntity } from './entities/posts.entity';
 
 export interface PostsRo {
   list: PostsEntity[];
   count: number;
 }
+
 @Injectable()
 export class PostsService {
   constructor(
@@ -17,9 +18,6 @@ export class PostsService {
   // 创建文章
   async create(post: Partial<PostsEntity>): Promise<PostsEntity> {
     const { title } = post;
-    if (!title) {
-      throw new HttpException('缺少文章标题', 401);
-    }
     const doc = await this.postsRepository.findOne({ where: { title } });
     if (doc) {
       throw new HttpException('文章已存在', 401);
@@ -44,12 +42,19 @@ export class PostsService {
 
   // 获取指定文章
   async findById(id): Promise<PostsEntity> {
-    return await this.postsRepository.findOne(id);
+    const res = await this.postsRepository.findOne({ where: { id } });
+    if (isNaN(Number(id))) {
+      throw new HttpException(`id 参数不合法`, 401);
+    }
+    if (!res) {
+      throw new HttpException(`id为${id}的文章不存在`, 401);
+    }
+    return res;
   }
 
   // 更新文章
   async updateById(id, post): Promise<PostsEntity> {
-    const existPost = await this.postsRepository.findOne(id);
+    const existPost = await this.findById(id);
     if (!existPost) {
       throw new HttpException(`id为${id}的文章不存在`, 401);
     }
@@ -59,7 +64,7 @@ export class PostsService {
 
   // 刪除文章
   async remove(id) {
-    const existPost = await this.postsRepository.findOne(id);
+    const existPost = await this.findById(id);
     if (!existPost) {
       throw new HttpException(`id为${id}的文章不存在`, 401);
     }

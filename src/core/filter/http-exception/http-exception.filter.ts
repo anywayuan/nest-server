@@ -28,11 +28,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
       ) {
         message = Object.values(message[0].constraints)[0] as string;
       }
-      response.status(status).json({
-        data: {},
-        message: message[0],
-        code: -1,
-      });
+      response
+        .status(status)
+        .header('Content-Type', 'application/json; charset=utf-8')
+        .json({
+          data: {},
+          message: message[0],
+          code: -1,
+        });
       return;
     }
 
@@ -42,9 +45,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       code: -1,
     };
 
-    // 设置返回的状态码， 请求头，发送错误信息
-    response.status(status);
-    response.header('Content-Type', 'application/json; charset=utf-8');
-    response.send(errorResponse);
+    response
+      .status(status)
+      .header('Content-Type', 'application/json; charset=utf-8')
+      .json(errorResponse);
   }
 }
