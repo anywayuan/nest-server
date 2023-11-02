@@ -43,6 +43,11 @@ export class User {
   })
   updateTime: Date;
 
+  // 用户状态 0:禁用 1:启用 2:删除 默认启用
+  @Column({ default: 1 })
+  status: number;
+
+  // 密码加密
   @BeforeInsert()
   async encryptPwd() {
     this.password = bcrypt.hashSync(this.password);

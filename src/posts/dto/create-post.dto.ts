@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { BaseResDto } from 'src/base/dto/base.dto';
 
 export class CreatePostDto {
   @ApiProperty({ description: '文章标题' })
@@ -36,13 +37,7 @@ export class CreatePostResDto extends CreatePostDto {
   readonly update_time: Date;
 }
 
-export class CreateBaseResDto {
+export class CreateBaseResDto extends BaseResDto {
   @ApiProperty({ description: '当前文章详情', type: CreatePostResDto })
   data: CreatePostResDto;
-
-  @ApiProperty({ description: 'code', example: 0 })
-  code: number;
-
-  @ApiProperty({ description: 'message', example: 'success' })
-  message: string;
 }

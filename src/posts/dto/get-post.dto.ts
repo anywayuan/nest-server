@@ -1,5 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CreatePostResDto } from './create-post.dto';
+import { BaseResDto } from '../../base/dto/base.dto';
 
 class ListData {
   @ApiProperty({ description: '文章列表', type: [CreatePostResDto] })
@@ -17,24 +18,12 @@ export class FindAllPostReqDto {
   readonly pageSize: number;
 }
 
-export class FindAllPostResDto {
+export class FindAllPostResDto extends BaseResDto {
   @ApiProperty({ description: 'list', type: ListData })
   readonly data: ListData;
-
-  @ApiProperty({ description: 'code', example: 0 })
-  readonly code: number;
-
-  @ApiProperty({ description: 'message', example: 'success' })
-  readonly message: string;
 }
 
-export class FindPostByIdResDto {
+export class FindPostByIdResDto extends BaseResDto {
   @ApiProperty({ description: '文章详情', type: CreatePostResDto })
   readonly data: CreatePostResDto;
-
-  @ApiProperty({ description: 'code', example: 0 })
-  readonly code: number;
-
-  @ApiProperty({ description: 'message', example: 'success' })
-  readonly message: string;
 }

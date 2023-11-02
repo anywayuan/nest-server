@@ -43,15 +43,33 @@ export class UserService {
     return { list: users, count: count };
   }
 
-  findOne(id: string) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.userRepository.findOne({ where: { id } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const res = await this.userRepository
+      .createQueryBuilder()
+      .update(User)
+      .set(updateUserDto)
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const res = await this.userRepository
+      .createQueryBuilder()
+      .update(User)
+      .set({ status: 2 })
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
   }
 }

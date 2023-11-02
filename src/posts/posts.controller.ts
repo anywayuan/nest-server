@@ -54,7 +54,7 @@ export class PostsController {
     type: FindPostByIdResDto,
   })
   @Get(':id')
-  async findById(@Param('id') id) {
+  async findById(@Param('id') id: string) {
     return await this.postsService.findById(id);
   }
 
@@ -66,7 +66,7 @@ export class PostsController {
   @ApiOperation({ summary: '更新文章' })
   @ApiResponse({ status: 200, description: 'success', type: CreateBaseResDto })
   @Put(':id')
-  async update(@Param('id') id, @Body() post: CreatePostDto) {
+  async update(@Param('id') id: string, @Body() post: CreatePostDto) {
     return await this.postsService.updateById(id, post);
   }
 
@@ -77,7 +77,7 @@ export class PostsController {
   @ApiOperation({ summary: '删除文章' })
   @ApiResponse({ status: 200, description: 'success', type: CreateBaseResDto })
   @Delete(':id')
-  async remove(@Param('id') id) {
+  async remove(@Param('id') id: string) {
     return await this.postsService.remove(id);
   }
 }
