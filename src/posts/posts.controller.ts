@@ -1,5 +1,5 @@
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { PostsService, PostsRo } from './posts.service';
+import { PostsService } from './posts.service';
 import {
   Body,
   Controller,
@@ -39,7 +39,7 @@ export class PostsController {
   @ApiOperation({ summary: '文章列表', description: '获取文章列表' })
   @ApiResponse({ status: 200, description: 'success', type: FindAllPostResDto })
   @Get()
-  async findAll(@Query() query: FindAllPostReqDto): Promise<PostsRo> {
+  async findAll(@Query() query: FindAllPostReqDto) {
     return await this.postsService.findAll(query);
   }
 
