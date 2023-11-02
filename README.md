@@ -1,73 +1,82 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+<div align=center>
+
+<img alt="Yuan Liang" src="./anyway.jpg" width=100 />
+
+# Hi, this is Yuan Liang :wave:
+
+<p>
+
+[![Bilibili](https://img.shields.io/badge/dynamic/json?labelColor=FE7398&logo=bilibili&logoColor=white&label=bilibili%20fans&color=00aeec&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dbilibili%26queryKey%3D439734028)](https://space.bilibili.com/287285230)
+[![Zhihu](https://img.shields.io/badge/dynamic/json?color=142026&labelColor=0066ff&logo=zhihu&logoColor=white&label=zhihu%20fans&query=%24.data.totalSubs&url=https%3A%2F%2Fapi.spencerwoo.com%2Fsubstats%2F%3Fsource%3Dzhihu%26queryKey%3Dsyy11cn)](https://www.zhihu.com/people/anywayuan)
+[![Juejin](https://img.shields.io/badge/juejin-%E6%A2%81%E4%BA%88%E5%AE%89-1e80ff?logo=bytedance)](https://juejin.cn/user/817692384440520)
+[![Github Stars](https://img.shields.io/github/stars/syy11cn?color=faf408&label=github%20stars&logo=github)](https://github.com/anywayuan)
+
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+[![Website](https://img.shields.io/badge/personal%20website-yuanki.cn-b860ff?logo=html5&logoColor=white&labelColor=red)](https://yuanki.cn)
+[![Wechat Subscription Account](https://img.shields.io/badge/subscription%20account-%E6%A2%81%E4%BA%88%E5%AE%89-1e80ff?logo=wechat)](https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzI5MjA3NjI1Mg==#wechat_redirect)
+
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+![Profile View Counter](https://camo.githubusercontent.com/a0ce5896a795e2bc6ceb500a50fa73b5f5182cf27d5bdef7e3c1ca70f41b75cf/68747470733a2f2f6b6f6d617265762e636f6d2f67687076632f3f757365726e616d653d7379793131636e)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Introduction :raised_hands:
 
-## Installation
+Student of [@UESTC](https://github.com/uestcer). :school:
 
-```bash
-$ pnpm install
-```
+Major in Software Engineering. :man_technologist:
 
-## Running the app
+I love open source spirit. :heart:
 
-```bash
-# development
-$ pnpm run start
+Hope to make more friends in open source projects. :eyes:
 
-# watch mode
-$ pnpm run start:dev
+## Orientation :dart:
 
-# production mode
-$ pnpm run start:prod
-```
+I love coding. :heart:
 
-## Test
+I love Front End technologys. :heart:
 
-```bash
-# unit tests
-$ pnpm run test
+<p>
 
-# e2e tests
-$ pnpm run test:e2e
+![HTML5](https://img.shields.io/badge/-HTML5-red?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/-CSS3-blue?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-yellow?logo=javascript&logoColor=white)
 
-# test coverage
-$ pnpm run test:cov
-```
+</p>
 
-## Support
+<p>
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+![TypeScript](https://img.shields.io/badge/-TypeScript-blue?logo=typescript&logoColor=white)
+![Vue](https://img.shields.io/badge/-Vue-34495e?logo=vue.js)
+![React](https://img.shields.io/badge/-React-282c34?logo=react)
+![MiniProgram](https://img.shields.io/badge/-MiniProgram-07c160?logo=wechat&logoColor=white)
 
-## Stay in touch
+</p>
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+<p>
 
-## License
+![Vite](https://img.shields.io/badge/-Vite-646cff?logo=vite&logoColor=white)
+![Rollup](https://img.shields.io/badge/-Rollup-ef3335?logo=rollup.js&logoColor=white)
+![Webpack](https://img.shields.io/badge/-Webpack-1a6bac?logo=webpack)
 
-Nest is [MIT licensed](LICENSE).
+</p>
+
+## Projects :computer:
+
+[![Config Router](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=vite-project)](https://github.com/anywayuan/vite-project)
+
+[![Course Assistant](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=koa_server)](https://github.com/anywayuan/koa_server)
+
+[![My Blog](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=express_server)](https://github.com/anywayuan/express_server)
+
+## Analysis :point_down:
+
+[![TopLangs](https://github-readme-stats.vercel.app/api/top-langs/?username=anuraghazra&layout=compact)](https://github.com/anuraghazra/github-readme-stats)
+
+![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=anywayuan&show_icons=true&bg_color=30,e96443,904e95&title_color=fff&text_color=fff)
+
+![](https://github-profile-trophy.vercel.app/?username=anywayuan&theme=flat&column=7&margin-w=10)
+
+</div>
