@@ -5,16 +5,18 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import type { StrategyOptions } from 'passport-jwt';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   // 这里的 Strategy 必须是 passport-jwt 包中的
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'yuanaigclound',
+      secretOrKey: configService.get('JWT_SECRET') ?? 'secret',
     } as StrategyOptions);
   }
 

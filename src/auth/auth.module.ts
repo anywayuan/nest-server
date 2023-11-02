@@ -5,10 +5,16 @@ import { User } from 'src/user/entities/user.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { ConfigService } from '@nestjs/config';
 
-const jwtModule = JwtModule.register({
-  secret: 'yuanaigclound', // TODO: 写在全局配置文件中
-  signOptions: { expiresIn: '4h' },
+const jwtModule = JwtModule.registerAsync({
+  inject: [ConfigService],
+  useFactory: async (configService: ConfigService) => ({
+    secret: configService.get('JWT_SECRET') ?? 'secret',
+    signOptions: {
+      expiresIn: configService.get('JWT_EXPIRES_IN') ?? '10m',
+    },
+  }),
 });
 
 @Module({
