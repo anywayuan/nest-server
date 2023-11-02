@@ -4,7 +4,7 @@ import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 import { AuthReqDto, AuthResDto } from './dto/auth.dto';
-import { Public } from '../global/decorator/public.decorator';
+import { Public } from '../../global/decorator/public.decorator';
 
 @ApiTags('auth')
 @Controller('auth')

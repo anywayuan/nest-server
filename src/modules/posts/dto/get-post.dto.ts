@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { CreatePostResDto } from './create-post.dto';
-import { BaseResDto } from '../../base/dto/base.dto';
+import { BaseResDto } from '../../../base/dto/base.dto';
 
 class ListData {
   @ApiProperty({ description: '文章列表', type: [CreatePostResDto] })

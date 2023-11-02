@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { compareSync } from 'bcryptjs';
 import { BadRequestException } from '@nestjs/common';
-import { User } from 'src/user/entities/user.entity';
+import { User } from 'src/modules/user/entities/user.entity';
 
 export class LocalStrategy extends PassportStrategy(Strategy) {
   // 此处的 Strategy 要引入 passport-local 中的

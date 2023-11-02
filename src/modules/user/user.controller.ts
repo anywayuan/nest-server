@@ -19,7 +19,7 @@ import {
   FindOneUserResDto,
 } from './dto/get-use.dto';
 import { UpdateUserDto, UpdateUserResDto } from './dto/update-user.dto';
-import { Public } from '../global/decorator/public.decorator';
+import { Public } from '../../global/decorator/public.decorator';
 // import { Public } from '../global/decorator/public.decorator';
 // import { AuthGuard } from '@nestjs/passport';
 
