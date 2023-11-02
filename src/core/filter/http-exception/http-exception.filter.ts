@@ -34,7 +34,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         .json({
           data: {},
           message: message[0],
-          code: -1,
+          code: status,
         });
       return;
     }
@@ -42,7 +42,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const errorResponse = {
       data: {},
       message: msg,
-      code: -1,
+      code: status,
     };
 
     response

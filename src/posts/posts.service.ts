@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PostsEntity } from './entities/posts.entity';
@@ -20,7 +20,7 @@ export class PostsService {
     const { title } = post;
     const doc = await this.postsRepository.findOne({ where: { title } });
     if (doc) {
-      throw new HttpException('文章已存在', 401);
+      throw new HttpException('文章已存在', HttpStatus.CONFLICT);
     }
     return await this.postsRepository.save(post);
   }
@@ -44,10 +44,10 @@ export class PostsService {
   async findById(id): Promise<PostsEntity> {
     const res = await this.postsRepository.findOne({ where: { id } });
     if (isNaN(Number(id))) {
-      throw new HttpException(`id 参数不合法`, 401);
+      throw new HttpException(`id 参数不合法`, HttpStatus.BAD_REQUEST);
     }
     if (!res) {
-      throw new HttpException(`id为${id}的文章不存在`, 401);
+      throw new HttpException(`id为${id}的文章不存在`, HttpStatus.NOT_FOUND);
     }
     return res;
   }
@@ -56,7 +56,7 @@ export class PostsService {
   async updateById(id, post): Promise<PostsEntity> {
     const existPost = await this.findById(id);
     if (!existPost) {
-      throw new HttpException(`id为${id}的文章不存在`, 401);
+      throw new HttpException(`id为${id}的文章不存在`, HttpStatus.NOT_FOUND);
     }
     const updatePost = this.postsRepository.merge(existPost, post);
     return this.postsRepository.save(updatePost);
@@ -66,7 +66,7 @@ export class PostsService {
   async remove(id) {
     const existPost = await this.findById(id);
     if (!existPost) {
-      throw new HttpException(`id为${id}的文章不存在`, 401);
+      throw new HttpException(`id为${id}的文章不存在`, HttpStatus.NOT_FOUND);
     }
     return await this.postsRepository.remove(existPost);
   }

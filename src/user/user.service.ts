@@ -23,7 +23,7 @@ export class UserService {
       where: { username },
     });
     if (existUser) {
-      throw new HttpException('用户名已存在', HttpStatus.BAD_REQUEST);
+      throw new HttpException('用户名已存在', HttpStatus.CONFLICT);
     }
     const newUser = await this.userRepository.create(createUser);
     return await this.userRepository.save(newUser);
