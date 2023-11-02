@@ -5,12 +5,18 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
+export interface UserRo {
+  list: User[];
+  count: number;
+}
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
+
   async register(createUser: CreateUserDto) {
     const { username } = createUser;
     const existUser = await this.userRepository.findOne({
@@ -23,11 +29,21 @@ export class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(query): Promise<UserRo> {
+    const qb = this.userRepository.createQueryBuilder('user');
+    qb.where('1 = 1');
+    qb.orderBy('user.create_time', 'DESC');
+
+    const count = await qb.getCount();
+    const { pageNum = 1, pageSize = 10 } = query;
+    qb.limit(pageSize);
+    qb.offset(pageSize * (pageNum - 1));
+    const users = await qb.getMany();
+
+    return { list: users, count: count };
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} user`;
   }
 

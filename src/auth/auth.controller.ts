@@ -8,7 +8,8 @@ import type { Request } from 'express';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-  @UseGuards(AuthGuard('local'))
+
+  @UseGuards(AuthGuard('local')) // 使用本地验证策略 派发 jwt
   @Post('login')
   login(@Req() req: Request) {
     return this.authService.login(req.user);

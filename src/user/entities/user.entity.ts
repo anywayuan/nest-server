@@ -5,7 +5,7 @@ import { Exclude } from 'class-transformer';
 @Entity('user')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ length: 100 })
   username: string; // 用户名
@@ -13,7 +13,7 @@ export class User {
   @Column({ length: 100 })
   nickname: string; // 昵称
 
-  @Exclude()
+  @Exclude() // 排除密码字段
   @Column()
   password: string; // 密码
 
