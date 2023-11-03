@@ -1,10 +1,11 @@
-import { Controller, Post, UseGuards, Req, Body } from '@nestjs/common';
+import { Controller, Post, UseGuards, Req, Body, Delete } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import type { Request } from 'express';
 import { AuthReqDto, AuthResDto } from './dto/auth.dto';
-import { Public } from '../../global/decorator/public.decorator';
+import { Public } from 'src/global/decorator/public.decorator';
+import { BaseResDto } from 'src/base/dto/base.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,5 +21,12 @@ export class AuthController {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   login(@Req() req: Request, @Body() body: AuthReqDto) {
     return this.authService.login(req.user);
+  }
+
+  @Delete('logout')
+  @ApiOperation({ summary: '退出登录', description: '退出登录' })
+  @ApiResponse({ status: 200, description: 'success', type: BaseResDto })
+  logout(@Req() req: Request) {
+    return this.authService.logout(req.user);
   }
 }
