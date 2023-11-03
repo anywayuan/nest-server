@@ -16,6 +16,7 @@ import { RedisModule } from './db/redis/redis.module';
 import { LoggerMiddleware } from './global/middleware/logger/logger.middleware';
 import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
+import { FuckModule } from './modules/fuck/fuck.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { TransformInterceptor } from './core/interceptor/transform/transform.int
     UserModule,
     AuthModule,
     RedisModule,
+    FuckModule,
   ],
   controllers: [AppController],
   providers: [
