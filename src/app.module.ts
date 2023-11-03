@@ -1,14 +1,21 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ConfigService, ConfigModule } from '@nestjs/config';
+import { WinstonModule } from 'nest-winston';
+import 'winston-daily-rotate-file';
+import { transports, format } from 'winston';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PostsModule } from './modules/posts/posts.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import envConfig from '../config/env';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
+import { RedisModule } from './db/redis/redis.module';
+import { LoggerMiddleware } from './global/middleware/logger/logger.middleware';
+import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
+import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
 
 @Module({
   imports: [
@@ -31,11 +38,44 @@ import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
         synchronize: true, // 根据实体自动创建数据库表，生产环境建议关闭
       }),
     }),
+    WinstonModule.forRoot({
+      transports: [
+        new transports.DailyRotateFile({
+          dirname: `logs`,
+          filename: `%DATE%.log`,
+          datePattern: 'YYYY-MM-DD',
+          zippedArchive: true,
+          maxSize: '20m',
+          maxFiles: '14d',
+          format: format.combine(
+            format.timestamp({
+              format: 'YYYY-MM-DD HH:mm:ss',
+            }),
+            format.printf(
+              (info) =>
+                `${info.timestamp} [${info.level}] : ${info.message} ${
+                  Object.keys(info).length ? JSON.stringify(info, null, 2) : ''
+                }`,
+            ),
+          ),
+        }),
+      ],
+    }),
     PostsModule,
     UserModule,
     AuthModule,
+    RedisModule,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: JwtAuthGuard }],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
+    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+  ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}

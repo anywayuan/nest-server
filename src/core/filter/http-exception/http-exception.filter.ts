@@ -3,11 +3,18 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
+  Inject,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
+import { getInfoFromReq } from 'src/global/helper/getInfoFromReq';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
+  constructor(
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private readonly logger: Logger,
+  ) {}
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp(); // 获取请求上下文
     const response = ctx.getResponse<Response>(); // 获取请求上下文中的 response对象
@@ -49,5 +56,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       .status(status)
       .header('Content-Type', 'application/json; charset=utf-8')
       .json(errorResponse);
+
+    this.logger.error(msg, {
+      status,
+      req: getInfoFromReq(ctx.getRequest()),
+    });
   }
 }

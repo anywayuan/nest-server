@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { BaseResDto } from 'src/base/dto/base.dto';
 
 class ResData {
   @ApiProperty({
@@ -22,13 +23,7 @@ export class AuthReqDto {
   readonly password: string;
 }
 
-export class AuthResDto {
+export class AuthResDto extends BaseResDto {
   @ApiProperty({ description: 'data', type: ResData })
   readonly data: ResData;
-
-  @ApiProperty({ description: 'code', example: 0 })
-  readonly code: number;
-
-  @ApiProperty({ description: 'message', example: 'success' })
-  readonly message: string;
 }
