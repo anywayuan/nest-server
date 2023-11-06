@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Fuck } from './entities/fuck.entity';
+import { FuckEntity } from './entities/fuck.entity';
 import { CreateFuckDto } from './dto/create-fuck.dto';
 import { UpdateFuckDto } from './dto/update-fuck.dto';
 
 @Injectable()
 export class FuckService {
   constructor(
-    @InjectRepository(Fuck)
-    private fuckRepository: Repository<Fuck>,
+    @InjectRepository(FuckEntity)
+    private fuckRepository: Repository<FuckEntity>,
   ) {}
   create(createFuckDto: CreateFuckDto) {
     return 'This action adds a new fuck';
