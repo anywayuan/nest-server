@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FuckEntity } from './entities/fuck.entity';
@@ -11,23 +11,55 @@ export class FuckService {
     @InjectRepository(FuckEntity)
     private fuckRepository: Repository<FuckEntity>,
   ) {}
-  create(createFuckDto: CreateFuckDto) {
-    return 'This action adds a new fuck';
+
+  async create(createFuck: CreateFuckDto) {
+    const { text } = createFuck;
+    const existText = await this.fuckRepository.findOne({
+      where: { text },
+    });
+    if (existText) {
+      throw new HttpException('该记录已存在', HttpStatus.CONFLICT);
+    }
+    const newText = await this.fuckRepository.create(createFuck);
+    return await this.fuckRepository.save(newText);
   }
 
   findAll() {
     return `This action returns all fuck`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} fuck`;
+  findRandomOne() {
+    const qb = this.fuckRepository
+      .createQueryBuilder('fuck')
+      .orderBy('RAND()')
+      .getOne();
+    return qb;
   }
 
-  update(id: number, updateFuckDto: UpdateFuckDto) {
-    return `This action updates a #${id} fuck`;
+  async update(id: number, updateFuckDto: UpdateFuckDto) {
+    const res = await this.fuckRepository
+      .createQueryBuilder()
+      .update(FuckEntity)
+      .set(updateFuckDto)
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      const existText = await this.fuckRepository.findOne({
+        where: { id },
+      });
+      return existText;
+    }
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} fuck`;
+  async remove(id: number) {
+    const existPost = await this.fuckRepository.findOne({
+      where: { id },
+    });
+    if (!existPost) {
+      throw new HttpException(`id为${id}的文章不存在`, HttpStatus.NOT_FOUND);
+    }
+    await this.fuckRepository.remove(existPost);
+    return {};
   }
 }
