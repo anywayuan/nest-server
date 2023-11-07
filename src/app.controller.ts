@@ -1,14 +1,23 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
+import { Public } from './global/decorator/public.decorator';
 
-@ApiTags('公共接口')
+@ApiTags('Universal')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post('upload')
+  @Public()
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file): string {
+    return this.appService.upload(file);
   }
 }

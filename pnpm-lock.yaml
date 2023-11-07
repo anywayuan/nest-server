@@ -112,6 +112,9 @@ devDependencies:
   '@types/jest':
     specifier: ^29.5.2
     version: 29.5.7
+  '@types/multer':
+    specifier: ^1.4.9
+    version: 1.4.9
   '@types/node':
     specifier: ^20.3.1
     version: 20.8.9
@@ -1454,6 +1457,12 @@ packages:
 
   /@types/mime@3.0.3:
     resolution: {integrity: sha512-i8MBln35l856k5iOhKk2XJ4SeAWg75mLIpZB4v6imOagKL6twsukBZGDMNhdOVk7yRFTMPpfILocMos59Q1otQ==}
+
+  /@types/multer@1.4.9:
+    resolution: {integrity: sha512-9NSvPJ2E8bNTc8XtJq1Cimx2Wrn2Ah48F15B2Du/hM8a8CHLhVbJMlF3ZCqhvMdht7Sa+YdP0aKP7N4fxDcrrg==}
+    dependencies:
+      '@types/express': 4.17.20
+    dev: true
 
   /@types/node@20.8.9:
     resolution: {integrity: sha512-UzykFsT3FhHb1h7yD4CA4YhBHq545JC0YnEz41xkipN88eKQtL6rSgocL5tbAP6Ola9Izm/Aw4Ora8He4x0BHg==}
