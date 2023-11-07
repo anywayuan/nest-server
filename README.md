@@ -65,15 +65,17 @@ I love Front End technologys. :heart:
 
 ## Projects :computer:
 
+[![yuan-nest-server](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=yuan-nest-server)](https://github.com/anywayuan/yuan-nest-server)
+
+[![vue-countup-v3](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=vue-countup-v3)](https://github.com/anywayuan/vue-countup-v3/tree/main)
+
 [![Config Router](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=vite-project)](https://github.com/anywayuan/vite-project)
 
 [![Course Assistant](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=koa_server)](https://github.com/anywayuan/koa_server)
 
-[![My Blog](https://github-readme-stats.vercel.app/api/pin/?username=anywayuan&repo=express_server)](https://github.com/anywayuan/express_server)
-
 ## Analysis :point_down:
 
-[![TopLangs](https://github-readme-stats.vercel.app/api/top-langs/?username=anuraghazra&layout=compact)](https://github.com/anuraghazra/github-readme-stats)
+[![TopLangs](https://github-readme-stats.vercel.app/api/top-langs/?username=anywayuan&layout=compact)](https://github.com/anuraghazra/github-readme-stats)
 
 ![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=anywayuan&show_icons=true&bg_color=30,e96443,904e95&title_color=fff&text_color=fff)
 
