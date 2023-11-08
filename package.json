@@ -36,6 +36,7 @@
     "cache-manager-redis-yet": "^4.1.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "cos-nodejs-sdk-v5": "^2.12.5",
     "mysql2": "^3.6.2",
     "nest-winston": "^1.9.4",
     "passport": "^0.6.0",

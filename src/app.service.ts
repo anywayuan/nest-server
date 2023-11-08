@@ -1,16 +1,19 @@
 import { Injectable, UploadedFile } from '@nestjs/common';
 import * as fs from 'fs';
+import { OssService } from './cosfs/oss/oss.service';
 
 @Injectable()
 export class AppService {
-  upload(@UploadedFile() file): string {
+  constructor(private ossService: OssService) {}
+
+  async upload(@UploadedFile() file): Promise<string> {
     fs.writeFileSync(`./${file.originalname}`, file.buffer);
-    // TODO: save file to oss bucket
-    fs.unlink(`./${file.originalname}`, (err) => {
+    const res = await this.ossService.uploadToOss(file.originalname);
+    console.log(res);
+    fs.unlink(`./uploads/${file.originalname}`, (err) => {
       if (err) {
         console.error(err);
       } else {
-        // file removed
         console.log('file removed');
       }
     });
