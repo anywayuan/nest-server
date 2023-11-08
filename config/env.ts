@@ -13,4 +13,5 @@ function parseEnv() {
   const filePath = isProd && fs.existsSync(prodEnv) ? prodEnv : localEnv;
   return { path: filePath };
 }
+
 export default parseEnv();

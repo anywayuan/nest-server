@@ -1,9 +1,9 @@
 {
-  "editor.fontSize": 16,
+  "editor.fontSize": 14,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
-  "editor.fontWeight": "350",
-  "editor.fontFamily": "Source Code Pro for Powerline",
+  "editor.fontWeight": "300",
+  "editor.fontFamily": "MonoLisa, Source Code Pro for Powerline",
   "cSpell.words": [
     "suibianshenme",
     "tinyint",
