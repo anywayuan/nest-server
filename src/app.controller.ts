@@ -17,7 +17,7 @@ export class AppController {
   @Post('upload')
   @Public()
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file): Promise<string> {
+  uploadFile(@UploadedFile() file) {
     return this.appService.upload(file);
   }
 }
