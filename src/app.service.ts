@@ -7,12 +7,12 @@ import { ConfigService } from '@nestjs/config';
 export class AppService {
   constructor(
     private ossService: OssService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   async upload(@UploadedFile() file) {
     fs.writeFileSync(`./uploads/${file.originalname}`, file.buffer);
-    const res = await this.ossService.uploadToOss(file.originalname);
+    await this.ossService.uploadToOss(file.originalname);
     fs.unlink(`./uploads/${file.originalname}`, (err) => {
       if (err) {
         console.error(err);
@@ -25,7 +25,9 @@ export class AppService {
       size: file.size,
       type: file.mimetype,
       date: new Date(),
-      url: `${this.configService.get<string>('COSFS_RESOURCES_URL')}${file.originalname}`,
+      url: `${this.configService.get<string>('COSFS_RESOURCES_URL')}${
+        file.originalname
+      }`,
     };
   }
 }
