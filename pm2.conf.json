@@ -1,0 +1,11 @@
+{
+  "apps": {
+    "name": "nest-server",
+    "script": "dist/src/main",
+    "watch": false,
+    "ignore_watch": [
+      "node_modules",
+      "logs"
+    ]
+  }
+}
