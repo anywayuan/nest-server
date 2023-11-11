@@ -1,7 +1,7 @@
 {
   "apps": {
-    "name": "nest-server",
-    "script": "dist/src/main",
+    "name": "yuan_nest_server",
+    "script": "./dist/src/main.js",
     "watch": false,
     "ignore_watch": [
       "node_modules",
