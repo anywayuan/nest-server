@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/modules/user/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
-import { RedisService } from '../../db/redis/redis.service';
+import { RedisService } from 'src/db/redis/redis.service';
 
 @Injectable()
 export class AuthService {

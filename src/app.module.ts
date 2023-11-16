@@ -17,6 +17,7 @@ import { LoggerMiddleware } from './global/middleware/logger/logger.middleware';
 import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
 import { FuckModule } from './modules/fuck/fuck.module';
+import { OssModule } from './cosfs/oss/oss.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { FuckModule } from './modules/fuck/fuck.module';
     AuthModule,
     RedisModule,
     FuckModule,
+    OssModule,
   ],
   controllers: [AppController],
   providers: [
