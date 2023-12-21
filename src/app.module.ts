@@ -18,6 +18,8 @@ import { HttpExceptionFilter } from './core/filter/http-exception/http-exception
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
 import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './cosfs/oss/oss.module';
+import { TaskModule } from './task/task.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -37,7 +39,7 @@ import { OssModule } from './cosfs/oss/oss.module';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         timezone: '+08:00', // 服务器上配置的时区
-        synchronize: true, // 根据实体自动创建数据库表，生产环境建议关闭
+        synchronize: true, // 根据实体自动创建数据库表，DDD思想领域驱动设计。如已经设计好数据库，生产环境建议关闭。
       }),
     }),
     WinstonModule.forRoot({
@@ -69,6 +71,8 @@ import { OssModule } from './cosfs/oss/oss.module';
     RedisModule,
     FuckModule,
     OssModule,
+    ScheduleModule.forRoot(),
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [
