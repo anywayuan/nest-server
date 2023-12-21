@@ -18,6 +18,8 @@ import { HttpExceptionFilter } from './core/filter/http-exception/http-exception
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
 import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './cosfs/oss/oss.module';
+import { TaskModule } from './task/task.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -69,6 +71,8 @@ import { OssModule } from './cosfs/oss/oss.module';
     RedisModule,
     FuckModule,
     OssModule,
+    ScheduleModule.forRoot(),
+    TaskModule,
   ],
   controllers: [AppController],
   providers: [
