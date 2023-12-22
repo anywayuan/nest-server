@@ -31,7 +31,7 @@ export class AppController {
       },
     },
   })
-  uploadFile(@UploadedFile() file) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.appService.upload(file);
   }
 }
