@@ -17,7 +17,7 @@ import { LoggerMiddleware } from './global/middleware/logger/logger.middleware';
 import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
 import { FuckModule } from './modules/fuck/fuck.module';
-import { OssModule } from './cosfs/oss/oss.module';
+import { OssModule } from './oss/oss.module';
 import { TaskModule } from './task/task.module';
 import { ScheduleModule } from '@nestjs/schedule';
 

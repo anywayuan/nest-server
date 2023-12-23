@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UploadedFile } from '@nestjs/common';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
-// import COS from 'cos-nodejs-sdk-v5'; // 腾讯 cos 使用 import 会报错，不支持 es6 模块
-
 import COS = require('cos-nodejs-sdk-v5');
 
 @Injectable()
 export class OssService {
-  private readonly cos;
+  private readonly cos: COS;
 
   constructor(private readonly configService: ConfigService) {
     this.cos = new COS({
@@ -33,5 +31,32 @@ export class OssService {
         },
       );
     });
+  }
+
+  async upload(@UploadedFile() file: Express.Multer.File) {
+    fs.writeFileSync(`./uploads/${file.originalname}`, file.buffer);
+    await this.uploadToOss(file.originalname);
+    fs.unlink(`./uploads/${file.originalname}`, (err) => {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('file removed');
+      }
+    });
+
+    const COSFS_RESOURCES_URL: string = this.configService.get<string>(
+      'COSFS_RESOURCES_URL',
+    );
+    const { originalname, size, mimetype } = file;
+    const url: string = `${COSFS_RESOURCES_URL}${originalname}`;
+
+    console.log(file);
+    return {
+      filename: originalname,
+      size,
+      type: mimetype,
+      date: new Date(),
+      url,
+    };
   }
 }
