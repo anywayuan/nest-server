@@ -3,8 +3,7 @@ import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 // import COS from 'cos-nodejs-sdk-v5'; // 腾讯 cos 使用 import 会报错，不支持 es6 模块
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const COS = require('cos-nodejs-sdk-v5');
+import COS = require('cos-nodejs-sdk-v5');
 
 @Injectable()
 export class OssService {

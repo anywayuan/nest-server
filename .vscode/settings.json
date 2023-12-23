@@ -1,9 +1,14 @@
 {
-  "editor.fontSize": 14,
+  "editor.fontSize": 16,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
-  "editor.fontWeight": "300",
-  "editor.fontFamily": "MonoLisa, Source Code Pro for Powerline",
+  "editor.fontWeight": "350",
+  "editor.fontFamily": "Rec Mono Casual",
+  // "editor.fontFamily": "Cascadia Mono",
+  // "editor.fontFamily": "JetBrains Mono",
+  // "editor.fontFamily": "Intel One Mono",
+  // "editor.fontFamily": "MonoLisa",
+  // "editor.fontFamily": "Source Code Pro for Powerline",
   "cSpell.words": [
     "suibianshenme",
     "tinyint",
