@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import * as fs from 'fs';
 
 @Injectable()
 export class ScheduleService {
@@ -9,7 +10,7 @@ export class ScheduleService {
 
   @Cron('30 10 0 * * *')
   handleCron() {
-    this.AutoSignToJJ().then(() => {});
+    this.AutoSignToJJ();
     this.AutoSignToZM();
     this.AutoDownloadBingWallpaperByEveryDay().then(() => {});
   }
@@ -17,7 +18,7 @@ export class ScheduleService {
   /**
    * @description: 掘金自动签到
    */
-  async AutoSignToJJ() {
+  AutoSignToJJ() {
     const sessionid: string = 'aeb81595b2bde6369235bdb4ec7360e2'; // SessionID
     const url: string =
       'https://api.juejin.cn/growth_api/v1/check_in?aid=2608&uuid=7170885490388043297&spider=0&msToken=IIknwbAVAiSVpKHIwKVtsx1Kd8vx7M6BRaCkrq7Ymk2WYGdNy2K6TzHXdjsKbiihCmElL9dv7romSX-G18nljUIzYG1YLkDnij42PTuiE8in8X1gYDSkV1nlSt8dUZ95&a_bogus=my0mXchtMsm1cfVwJwDz9bwm8qD0YWRVgZEzBetwIzLD';
@@ -70,22 +71,30 @@ export class ScheduleService {
       enddate: string;
     };
 
-    const base = 'https://www.bing.com';
-    const reqUrl =
+    const base: string = 'https://www.bing.com';
+    const reqUrl: string =
       base +
       '/HPImageArchive.aspx?format=js&idx=0&n=9&pid=hp&FORM=BEHPTB&uhd=1&uhdwidth=3840&uhdheight=2160&setmkt=%s&setlang=en';
     const options = {
       url: reqUrl,
       method: 'get',
     };
-    let todayWallpaper: TodayWallpaper = {
-      url: '',
-      title: '',
-      copyright: '',
-      enddate: '',
-    };
+    let todayWallpaper = {} as TodayWallpaper;
     const res = await firstValueFrom(this.httpService.request(options));
     todayWallpaper = res.data.images[0] as TodayWallpaper;
-    console.log(todayWallpaper);
+    const imageFullUrl: string = base + todayWallpaper.url; // 图片资源路径
+    // 下载资源
+    const response = await firstValueFrom(
+      this.httpService.request({
+        url: imageFullUrl,
+        method: 'get',
+        responseType: 'arraybuffer',
+      }),
+    );
+    // 保存图片
+    fs.writeFileSync(
+      `./bing/${todayWallpaper.enddate}.jpeg`,
+      Buffer.from(response.data),
+    );
   }
 }
