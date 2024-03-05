@@ -20,6 +20,7 @@ import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './oss/oss.module';
 import { TaskModule } from './task/task.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { LightAndYouModule } from './modules/light-and-you/light-and-you.module';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
         timezone: '+08:00', // 服务器上配置的时区
-        synchronize: true, // 根据实体自动创建数据库表，DDD思想领域驱动设计。如已经设计好数据库，生产环境建议关闭。
+        synchronize: false, // 根据实体自动创建数据库表，DDD思想领域驱动设计。如已经设计好数据库，生产环境建议关闭。
       }),
     }),
     WinstonModule.forRoot({
@@ -73,6 +74,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     OssModule,
     ScheduleModule.forRoot(),
     TaskModule,
+    LightAndYouModule,
   ],
   controllers: [AppController],
   providers: [
