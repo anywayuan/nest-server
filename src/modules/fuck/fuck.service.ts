@@ -28,12 +28,19 @@ export class FuckService {
     return `This action returns all fuck`;
   }
 
-  findRandomOne() {
-    const qb = this.fuckRepository
-      .createQueryBuilder('fuck')
+  async findRandomOne(params: { ids: number[] }) {
+    const { ids } = params;
+    const qb = this.fuckRepository.createQueryBuilder('fuck');
+    const count = await qb.getCount();
+    const res = await qb
+      .where('id not in (:ids)', { ids })
       .orderBy('RAND()')
       .getOne();
-    return qb;
+
+    return {
+      count,
+      data: res,
+    };
   }
 
   async update(id: number, updateFuckDto: UpdateFuckDto) {
