@@ -20,7 +20,7 @@ export class FuckService {
     if (existText) {
       throw new HttpException('该记录已存在', HttpStatus.CONFLICT);
     }
-    const newText = await this.fuckRepository.create(createFuck);
+    const newText = this.fuckRepository.create(createFuck);
     return await this.fuckRepository.save(newText);
   }
 
@@ -28,12 +28,19 @@ export class FuckService {
     return `This action returns all fuck`;
   }
 
-  findRandomOne() {
-    const qb = this.fuckRepository
-      .createQueryBuilder('fuck')
+  async findRandomOne(params: { ids: number[] }) {
+    const { ids } = params;
+    const qb = this.fuckRepository.createQueryBuilder('fuck');
+    const count = await qb.getCount();
+    const res = await qb
+      .where('id not in (:ids)', { ids })
       .orderBy('RAND()')
       .getOne();
-    return qb;
+
+    return {
+      count,
+      data: res,
+    };
   }
 
   async update(id: number, updateFuckDto: UpdateFuckDto) {
@@ -44,10 +51,7 @@ export class FuckService {
       .where('id = :id', { id })
       .execute();
     if (res.affected === 1) {
-      const existText = await this.fuckRepository.findOne({
-        where: { id },
-      });
-      return existText;
+      return {};
     }
     throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }

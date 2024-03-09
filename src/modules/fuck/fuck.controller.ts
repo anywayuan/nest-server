@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { FuckService } from './fuck.service';
 import { CreateFuckDto, CreateFuckResDto } from './dto/create-fuck.dto';
 import { GetFuckResDto } from './dto/get-fuck.dto';
@@ -23,19 +15,19 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 export class FuckController {
   constructor(private readonly fuckService: FuckService) {}
 
-  @Post()
+  @Post('/add')
   @ApiOperation({ summary: '新增' })
   @ApiResponse({ status: 200, description: 'success', type: CreateFuckResDto })
   create(@Body() createFuck: CreateFuckDto) {
     return this.fuckService.create(createFuck);
   }
 
-  @Get()
+  @Post()
   @Public()
   @ApiOperation({ summary: '随机获取' })
   @ApiResponse({ status: 200, description: 'success', type: GetFuckResDto })
-  findOne() {
-    return this.fuckService.findRandomOne();
+  findOne(@Body() params: { ids: number[] }) {
+    return this.fuckService.findRandomOne(params);
   }
 
   @Patch(':id')
