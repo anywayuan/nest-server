@@ -20,7 +20,7 @@ export class FuckService {
     if (existText) {
       throw new HttpException('该记录已存在', HttpStatus.CONFLICT);
     }
-    const newText = await this.fuckRepository.create(createFuck);
+    const newText = this.fuckRepository.create(createFuck);
     return await this.fuckRepository.save(newText);
   }
 
@@ -51,10 +51,7 @@ export class FuckService {
       .where('id = :id', { id })
       .execute();
     if (res.affected === 1) {
-      const existText = await this.fuckRepository.findOne({
-        where: { id },
-      });
-      return existText;
+      return {};
     }
     throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }
