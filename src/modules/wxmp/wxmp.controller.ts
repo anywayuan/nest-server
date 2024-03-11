@@ -1,29 +1,29 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { LightAndYouService } from './light-and-you.service';
+import { WxmpService } from './wxmp.service';
 import { Public } from 'src/global/decorator/public.decorator';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GetAllAlbumResDto } from './dto/get-album.dto';
 import { GetPhotosResDto } from './dto/get-photos.dto';
 import { GetPhotosReqDto } from './dto/get-photos.dto';
 
-@ApiTags('Sky And You')
+@ApiTags('wxmp')
 @Controller('wxmp')
-export class LightAndYouController {
-  constructor(private readonly lightAndYouService: LightAndYouService) {}
+export class WxmpController {
+  constructor(private readonly wxmpService: WxmpService) {}
 
   @Get('albums')
   @Public()
-  @ApiOperation({ summary: '获取相册列表' })
+  @ApiOperation({ summary: '图片分类' })
   @ApiResponse({ status: 200, description: 'success', type: GetAllAlbumResDto })
   async getAlbumList() {
-    return await this.lightAndYouService.getAlbumList();
+    return await this.wxmpService.getAlbumList();
   }
 
   @Post('photos')
   @Public()
-  @ApiOperation({ summary: '获取分类下图片资源' })
+  @ApiOperation({ summary: '根据分类获取' })
   @ApiResponse({ status: 200, description: 'success', type: GetPhotosResDto })
   async getPhotosByAlbum(@Body() body: GetPhotosReqDto) {
-    return await this.lightAndYouService.getPhotosByAlbum(body);
+    return await this.wxmpService.getPhotosByAlbum(body);
   }
 }
