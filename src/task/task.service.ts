@@ -5,6 +5,8 @@ import { firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
 import { juejin, zm, bing } from '../../config/autoScriptConf';
 
+const dayjs = require('dayjs');
+
 @Injectable()
 export class ScheduleService {
   constructor(private readonly httpService: HttpService) {}
@@ -80,9 +82,16 @@ export class ScheduleService {
         responseType: 'arraybuffer',
       }),
     );
+    const currentYear = dayjs().format('YYYY');
+    const currentMonth = dayjs().format('MM');
+    const date = `${currentYear + currentMonth}`;
+    // 创建文件夹
+    if (!fs.existsSync(`./bing/${date}`)) {
+      fs.mkdirSync(`./bing/${date}`);
+    }
     // 保存图片
     fs.writeFileSync(
-      `./bing/${todayWallpaper.enddate}.jpeg`,
+      `./bing/${date}/${todayWallpaper.title}.jpeg`,
       Buffer.from(response.data),
     );
   }
