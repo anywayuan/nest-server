@@ -4,8 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
 import { juejin, zm, bing } from '../../config/autoScriptConf';
-
-const dayjs = require('dayjs');
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ScheduleService {
@@ -91,7 +90,7 @@ export class ScheduleService {
     }
     // 保存图片
     fs.writeFileSync(
-      `./bing/${date}/${todayWallpaper.title}.jpeg`,
+      `./bing/${date}/${todayWallpaper.enddate}.jpeg`,
       Buffer.from(response.data),
     );
   }
