@@ -1,8 +1,7 @@
 {
-  "editor.fontSize": 18,
+  "editor.fontSize": 16,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
-  "editor.fontWeight": "350",
   // "editor.fontFamily": "Rec Mono Casual",
   // "editor.fontFamily": "Cascadia Mono",
   "editor.fontFamily": "JetBrains Mono",

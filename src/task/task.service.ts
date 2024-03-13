@@ -11,10 +11,12 @@ export class ScheduleService {
   constructor(private readonly httpService: HttpService) {}
 
   @Cron('30 10 0 * * *')
-  handleCron() {
+  async handleCron() {
     this.AutoSignToJJ();
+    console.log('定时任务-开始');
     // this.AutoSignToZM();
-    this.AutoDownloadBingWallpaperByEveryDay();
+    await this.AutoDownloadBingWallpaperByEveryDay();
+    console.log('定时任务-结束');
   }
 
   /**
@@ -50,7 +52,7 @@ export class ScheduleService {
     };
 
     firstValueFrom(this.httpService.request(options)).then((res) => {
-      console.log('钻芒自动签：', res.data);
+      console.log('钻芒自动签到：', res.data);
     });
   }
 

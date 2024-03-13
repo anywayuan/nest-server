@@ -5,21 +5,26 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import 'winston-daily-rotate-file';
 import { transports, format } from 'winston';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PostsModule } from './modules/posts/posts.module';
-import { UserModule } from './modules/user/user.module';
-import { AuthModule } from './modules/auth/auth.module';
+import { ScheduleModule } from '@nestjs/schedule';
+
 import envConfig from '../config/env';
+
 import { JwtAuthGuard } from './global/guard/jwt-auth.guard';
-import { RedisModule } from './db/redis/redis.module';
 import { LoggerMiddleware } from './global/middleware/logger/logger.middleware';
 import { HttpExceptionFilter } from './core/filter/http-exception/http-exception.filter';
 import { TransformInterceptor } from './core/interceptor/transform/transform.interceptor';
+
+import { AppController } from './app.controller';
+
+import { AppService } from './app.service';
+
+import { RedisModule } from './db/redis/redis.module';
+import { PostsModule } from './modules/posts/posts.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './oss/oss.module';
 import { TaskModule } from './task/task.module';
-import { ScheduleModule } from '@nestjs/schedule';
 import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
 
 @Module({
@@ -66,13 +71,13 @@ import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
         }),
       ],
     }),
+    ScheduleModule.forRoot(),
     PostsModule,
     UserModule,
     AuthModule,
     RedisModule,
     FuckModule,
     OssModule,
-    ScheduleModule.forRoot(),
     TaskModule,
     WxmpModule,
   ],
