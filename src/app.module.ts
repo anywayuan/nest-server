@@ -20,21 +20,21 @@ import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './oss/oss.module';
 import { TaskModule } from './task/task.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { LightAndYouModule } from './modules/light-and-you/light-and-you.module';
+import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true, // 设置为全局
+      isGlobal: true,
       envFilePath: [envConfig.path],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        type: 'mysql', // 数据库类型
+        type: 'mysql',
         autoLoadEntities: true, // 自动加载实体
-        host: configService.get('DB_HOST'), // 主机，默认为localhost
+        host: configService.get('DB_HOST'),
         port: configService.get<number>('DB_PORT'),
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
@@ -74,7 +74,7 @@ import { LightAndYouModule } from './modules/light-and-you/light-and-you.module'
     OssModule,
     ScheduleModule.forRoot(),
     TaskModule,
-    LightAndYouModule,
+    WxmpModule,
   ],
   controllers: [AppController],
   providers: [

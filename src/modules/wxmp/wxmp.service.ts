@@ -12,7 +12,7 @@ export interface AlbumRes {
 }
 
 @Injectable()
-export class LightAndYouService {
+export class WxmpService {
   constructor(
     @InjectRepository(AlbumsEntity)
     private albumsRepository: Repository<AlbumsEntity>,
