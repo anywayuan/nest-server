@@ -13,8 +13,8 @@ export class ScheduleService {
   @Cron('30 10 0 * * *')
   handleCron() {
     this.AutoSignToJJ();
-    this.AutoSignToZM();
-    this.AutoDownloadBingWallpaperByEveryDay().then(() => {});
+    // this.AutoSignToZM();
+    this.AutoDownloadBingWallpaperByEveryDay();
   }
 
   /**
@@ -83,14 +83,19 @@ export class ScheduleService {
     );
     const currentYear = dayjs().format('YYYY');
     const currentMonth = dayjs().format('MM');
-    const date = `${currentYear + currentMonth}`;
+    const folderName = `${currentYear + currentMonth}`;
     // 创建文件夹
-    if (!fs.existsSync(`./bing/${date}`)) {
-      fs.mkdirSync(`./bing/${date}`);
+    if (!fs.existsSync(`./bing/${folderName}`)) {
+      fs.mkdirSync(`./bing/${folderName}`);
     }
+    const fileName =
+      todayWallpaper.title && todayWallpaper.title !== 'Info'
+        ? todayWallpaper.title
+        : todayWallpaper.enddate;
+
     // 保存图片
     fs.writeFileSync(
-      `./bing/${date}/${todayWallpaper.enddate}.jpeg`,
+      `./bing/${folderName}/${fileName}.jpeg`,
       Buffer.from(response.data),
     );
   }

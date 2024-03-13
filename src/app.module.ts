@@ -20,7 +20,7 @@ import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './oss/oss.module';
 import { TaskModule } from './task/task.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { Wxmp } from './modules/wxmp/wxmp.module';
+import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
 
 @Module({
   imports: [
@@ -74,7 +74,7 @@ import { Wxmp } from './modules/wxmp/wxmp.module';
     OssModule,
     ScheduleModule.forRoot(),
     TaskModule,
-    Wxmp,
+    WxmpModule,
   ],
   controllers: [AppController],
   providers: [
