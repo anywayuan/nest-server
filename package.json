@@ -41,6 +41,7 @@
     "class-validator": "^0.14.1",
     "cos-nodejs-sdk-v5": "^2.13.3",
     "dayjs": "^1.11.10",
+    "express": "^4.18.3",
     "mysql2": "^3.9.2",
     "nest-winston": "^1.9.4",
     "passport": "^0.6.0",
