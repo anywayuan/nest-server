@@ -53,4 +53,11 @@ export class WxmpService {
       count,
     };
   }
+
+  // 获取后台路由
+  async getAdminRoutes() {
+    return {
+      data: [],
+    };
+  }
 }

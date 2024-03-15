@@ -26,4 +26,9 @@ export class WxmpController {
   async getPhotosByAlbum(@Body() body: GetPhotosReqDto) {
     return await this.wxmpService.getPhotosByAlbum(body);
   }
+
+  @Get('admin/routes')
+  async getAdminRoutes() {
+    return await this.wxmpService.getAdminRoutes();
+  }
 }
