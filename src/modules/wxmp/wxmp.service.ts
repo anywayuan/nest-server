@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AlbumDto } from './dto/album.dto';
 import { GetPhotosReqDto } from './dto/get-photos.dto';
+import { QueryAllAlbum } from './dto/get-album.dto';
 
 export interface AlbumRes {
   list: AlbumDto[];
@@ -20,10 +21,24 @@ export class WxmpService {
     private photoRepository: Repository<PhotoEntity>,
   ) {}
 
-  // 获取相册列表
-  async getAlbumList(): Promise<AlbumRes> {
+  /**
+   * 查询全部分类
+   */
+  async getAlbumList(params: QueryAllAlbum): Promise<AlbumRes> {
+    const { page = 1, page_size = 10, title, del } = params;
+
     const qb = this.albumsRepository.createQueryBuilder('albums');
     qb.where('1 = 1');
+    if (title) {
+      qb.andWhere('(albums.title like :title or albums.zh_title like :title)', {
+        title: `%${title}%`,
+      });
+    }
+    if (del) {
+      qb.andWhere('albums.del = :del', { del });
+    }
+    qb.limit(page_size);
+    qb.offset(page_size * (page - 1));
 
     const count = await qb.getCount();
     const albums = await qb.getMany();
@@ -34,7 +49,9 @@ export class WxmpService {
     };
   }
 
-  // 获取分类下图片资源
+  /**
+   * 根据分类 ID 获取该分类下的图片
+   */
   async getPhotosByAlbum(params: GetPhotosReqDto) {
     const { page = 1, page_size = 10, pid } = params;
     const qb = this.photoRepository.createQueryBuilder('photo');

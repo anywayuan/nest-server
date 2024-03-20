@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { WxmpService } from './wxmp.service';
 import { Public } from 'src/global/decorator/public.decorator';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { GetAllAlbumResDto } from './dto/get-album.dto';
+import { GetAllAlbumResDto, QueryAllAlbum } from './dto/get-album.dto';
 import { GetPhotosResDto } from './dto/get-photos.dto';
 import { GetPhotosReqDto } from './dto/get-photos.dto';
 
@@ -15,8 +15,8 @@ export class WxmpController {
   @Public()
   @ApiOperation({ summary: '图片分类' })
   @ApiResponse({ status: 200, description: 'success', type: GetAllAlbumResDto })
-  async getAlbumList() {
-    return await this.wxmpService.getAlbumList();
+  async getAlbumList(@Query() params: QueryAllAlbum) {
+    return await this.wxmpService.getAlbumList(params);
   }
 
   @Post('photos')
