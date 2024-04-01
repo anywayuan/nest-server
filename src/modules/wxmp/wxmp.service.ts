@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { AlbumsEntity } from './entities/album.entity';
 import { PhotoEntity } from './entities/photo.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -21,9 +21,7 @@ export class WxmpService {
     private photoRepository: Repository<PhotoEntity>,
   ) {}
 
-  /**
-   * 查询全部分类
-   */
+  /** 查询全部分类 */
   async getAlbumList(params: QueryAllAlbum): Promise<AlbumRes> {
     const { page = 1, page_size = 10, title, del } = params;
 
@@ -77,4 +75,30 @@ export class WxmpService {
       data: [],
     };
   }
+
+  /** 新增分类 */
+  async addAlbum(postData: AlbumDto) {
+    const { title, zh_title } = postData;
+    const qb = this.albumsRepository.createQueryBuilder('albums');
+    qb.where('1 = 1');
+    qb.andWhere('(albums.title = :title or albums.zh_title = :zh_title)', {
+      title,
+      zh_title,
+    });
+    const count = await qb.getCount();
+    if (count > 0) {
+      throw new HttpException('分类已存在', HttpStatus.BAD_REQUEST);
+    }
+    const newAlbum = await this.albumsRepository.create({
+      ...postData,
+      create_time: new Date(),
+      update_time: new Date(),
+    });
+    await this.albumsRepository.save(newAlbum);
+
+    return {};
+  }
+
+  /** 更新分类 */
+  async updateAlbum() {}
 }

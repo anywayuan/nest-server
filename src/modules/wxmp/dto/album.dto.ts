@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsInt } from 'class-validator';
 import { BaseResDto } from 'src/base/dto/base.dto';
 
 export class AlbumDto {
@@ -6,9 +7,11 @@ export class AlbumDto {
   readonly id: number;
 
   @ApiProperty({ description: '标题', example: 'Sky' })
+  @IsNotEmpty({ message: 'title is required' })
   readonly title: string;
 
   @ApiProperty({ description: '中文标题', example: '光遇' })
+  @IsNotEmpty({ message: 'zh_title is required' })
   readonly zh_title: string;
 
   @ApiProperty({
@@ -16,9 +19,12 @@ export class AlbumDto {
     example:
       'https://yuanki-1256318267.cos.ap-shanghai.myqcloud.com/light_and_you/IMG_1595.JPG',
   })
+  @IsNotEmpty({ message: 'cover_url is required' })
   readonly cover_url: string;
 
   @ApiProperty({ description: '是否删除', example: 1 })
+  @IsNotEmpty({ message: 'del is required' })
+  @IsInt({ message: 'del must be an integer 0 or 1' })
   readonly del: number;
 
   @ApiProperty({
@@ -34,7 +40,7 @@ export class AlbumDto {
   readonly update_time: Date;
 }
 
-export class CreateAlbumsDto extends BaseResDto {
-  @ApiProperty({ description: 'data', type: AlbumDto })
-  readonly data: AlbumDto;
+export class CreateAlbumsResDto extends BaseResDto {
+  @ApiProperty({ description: 'data', type: Object })
+  readonly data: Record<any, any>;
 }
