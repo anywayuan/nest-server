@@ -47,9 +47,7 @@ export class WxmpService {
     };
   }
 
-  /**
-   * 根据分类 ID 获取该分类下的图片
-   */
+  /** 根据分类ID查找 */
   async getPhotosByAlbum(params: GetPhotosReqDto) {
     const { page = 1, page_size = 10, pid } = params;
     const qb = this.photoRepository.createQueryBuilder('photo');
@@ -100,5 +98,33 @@ export class WxmpService {
   }
 
   /** 更新分类 */
-  async updateAlbum() {}
+  async updateAlbum(id: string, putData: AlbumDto) {
+    const res = await this.albumsRepository
+      .createQueryBuilder()
+      .update(AlbumsEntity)
+      .set({
+        ...putData,
+        update_time: new Date(),
+      })
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
+  }
+
+  /** 删除分类 */
+  async deleteAlbum(id: string) {
+    const res = await this.albumsRepository
+      .createQueryBuilder()
+      .delete()
+      .from(AlbumsEntity)
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
+  }
 }
