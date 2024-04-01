@@ -67,7 +67,7 @@ export class WxmpService {
     };
   }
 
-  // 获取后台路由
+  /** 获取后台路由 */
   async getAdminRoutes() {
     return {
       data: [],
@@ -98,7 +98,7 @@ export class WxmpService {
   }
 
   /** 更新分类 */
-  async updateAlbum(id: string, putData: AlbumDto) {
+  async updateAlbum(id: string, putData: Partial<AlbumDto>) {
     const res = await this.albumsRepository
       .createQueryBuilder()
       .update(AlbumsEntity)

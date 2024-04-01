@@ -47,7 +47,7 @@ export class WxmpController {
     description: 'success',
     type: CreateAlbumsResDto,
   })
-  async updateAlbum(@Param('id') id: string, @Body() body: AlbumDto) {
+  async updateAlbum(@Param('id') id: string, @Body() body: Partial<AlbumDto>) {
     return await this.wxmpService.updateAlbum(id, body);
   }
 
