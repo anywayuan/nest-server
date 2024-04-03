@@ -17,16 +17,21 @@ export class AuthService {
 
     const access_token = this.jwtService.sign(payload);
 
+    const JWT_EXPIRES_IN = this.configService.get<number>('JWT_EXPIRES_IN');
     // 将token存入redis
     await this.redisService.set(
       `token_${user.id}`,
       access_token,
-      this.configService.get<number>('JWT_EXPIRES_IN'),
+      JWT_EXPIRES_IN,
     );
 
     return {
       access_token,
+      refresh_token: '',
+      username: user.username,
+      roles: user.role.split(','),
       type: 'Bearer',
+      expires: Date.now() + Number(JWT_EXPIRES_IN),
     };
   }
 
