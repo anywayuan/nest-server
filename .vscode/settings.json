@@ -1,16 +1,29 @@
 {
+  "editor.fontFamily": "JetBrains Mono",
   "editor.fontSize": 18,
   "editor.tabSize": 2,
   "editor.wordWrap": "on",
-  // "editor.fontFamily": "Rec Mono Casual",
-  // "editor.fontFamily": "Cascadia Mono",
-  "editor.fontFamily": "JetBrains Mono",
-  // "editor.fontFamily": "Intel One Mono",
-  // "editor.fontFamily": "MonoLisa",
-  // "editor.fontFamily": "Source Code Pro for Powerline",
-  "cSpell.words": [
-    "suibianshenme",
-    "tinyint",
-    "typeorm"
-  ],
+  "editor.lineHeight": 28,
+  "editor.fontLigatures": "'ss01','ss05','dlig'",
+  "window.zoomLevel": 1,
+  "files.autoSave": "onFocusChange",
+  "cSpell.words": ["suibianshenme", "tinyint", "typeorm"],
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/target": true,
+    "**/logs": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/.idea": true,
+    "**/*.js": {
+      "when": "$(basename).ts"
+    },
+    "**/node_modules": true
+  }
 }
