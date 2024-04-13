@@ -7,7 +7,13 @@
   "editor.fontLigatures": "'ss01','ss05','dlig'",
   "window.zoomLevel": 1,
   "files.autoSave": "onFocusChange",
-  "cSpell.words": ["suibianshenme", "tinyint", "typeorm"],
+  "cSpell.words": [
+    "enddate",
+    "juejin",
+    "suibianshenme",
+    "tinyint",
+    "typeorm"
+  ],
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,

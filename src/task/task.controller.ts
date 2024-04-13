@@ -11,7 +11,7 @@ export class TaskController {
   @Get()
   @Public()
   taskTest() {
-    this.scheduleService.AutoDownloadBingWallpaperByEveryDay();
+    this.scheduleService.handleCron();
     return '123';
   }
 }
