@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseResDto } from 'src/base/dto/base.dto';
 import { Photos } from './photos.dto';
-import { IsNotEmpty } from 'class-validator';
 
 class ListData {
   @ApiProperty({ description: '图片资源列表', type: [Photos] })
@@ -24,6 +23,5 @@ export class GetPhotosReqDto {
   readonly page_size: number;
 
   @ApiProperty({ description: '分类id', example: 1 })
-  @IsNotEmpty({ message: 'pid is required!' })
-  readonly pid: number;
+  readonly pid?: number;
 }

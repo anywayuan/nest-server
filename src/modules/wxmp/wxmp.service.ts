@@ -52,7 +52,9 @@ export class WxmpService {
     const { page = 1, page_size = 10, pid } = params;
     const qb = this.photoRepository.createQueryBuilder('photo');
     qb.where('1 = 1');
-    qb.andWhere('photo.pid = :pid', { pid });
+    if (pid) {
+      qb.andWhere('photo.pid = :pid', { pid });
+    }
     qb.orderBy('photo.create_time', 'DESC');
 
     const count = await qb.getCount();
@@ -87,7 +89,7 @@ export class WxmpService {
     if (count > 0) {
       throw new HttpException('分类已存在', HttpStatus.BAD_REQUEST);
     }
-    const newAlbum = await this.albumsRepository.create({
+    const newAlbum = this.albumsRepository.create({
       ...postData,
       create_time: new Date(),
       update_time: new Date(),

@@ -12,8 +12,8 @@ export class ScheduleService {
 
   @Cron('30 10 0 * * *')
   async handleCron() {
-    this.AutoSignToJJ();
     console.log('定时任务-开始');
+    this.AutoSignToJJ();
     // this.AutoSignToZM();
     await this.AutoDownloadBingWallpaperByEveryDay();
     console.log('定时任务-结束');
