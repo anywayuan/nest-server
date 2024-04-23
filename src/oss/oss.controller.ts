@@ -1,6 +1,8 @@
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
+  Body,
   Controller,
+  Delete,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -9,6 +11,7 @@ import { OssService } from './oss.service';
 import { Public } from '../global/decorator/public.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadResDto } from '../base/dto/upload.dto';
+import { DelMultipleObject } from './types';
 
 @ApiTags('oss')
 @Controller()
@@ -33,5 +36,11 @@ export class OssController {
   })
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     return this.ossService.upload(file);
+  }
+
+  /** TODO: oss删除测试 */
+  @Delete('oss/del')
+  delFile(@Body() body: DelMultipleObject[]) {
+    return this.ossService.delFile(body);
   }
 }

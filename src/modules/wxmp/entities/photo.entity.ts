@@ -13,4 +13,10 @@ export class PhotoEntity {
 
   @Column()
   create_time: Date;
+
+  @Column()
+  key: string;
+
+  @Column()
+  update_time: Date;
 }

@@ -12,10 +12,9 @@ import { WxmpService } from './wxmp.service';
 import { Public } from 'src/global/decorator/public.decorator';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { GetAllAlbumResDto, QueryAllAlbum } from './dto/get-album.dto';
-import { GetPhotosResDto } from './dto/get-photos.dto';
-import { GetPhotosReqDto } from './dto/get-photos.dto';
+import { GetPhotosResDto, GetPhotosReqDto } from './dto/get-photos.dto';
 import { AlbumDto, CreateAlbumsResDto } from './dto/album.dto';
-
+import { AddPhoto, DelPhoto } from './dto/photos.dto';
 @ApiTags('wxmp')
 @Controller('wxmp')
 export class WxmpController {
@@ -62,12 +61,40 @@ export class WxmpController {
     return await this.wxmpService.deleteAlbum(id);
   }
 
-  @Post('photos')
-  @Public()
+  @Get('photos')
   @ApiOperation({ summary: '根据分类获取' })
   @ApiResponse({ status: 200, description: 'success', type: GetPhotosResDto })
   async getPhotosByAlbum(@Body() body: GetPhotosReqDto) {
     return await this.wxmpService.getPhotosByAlbum(body);
+  }
+
+  /** 管理分类下图片-新增 */
+  @Post('photos')
+  async addPhoto(@Body() body: AddPhoto) {
+    return this.wxmpService.addPhoto(body);
+  }
+
+  /** 管理分类下图片-删除 */
+  /**
+   * 1. 根据id删除记录
+   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片
+   */
+  @Delete('photos')
+  async delPhoto(@Body() body: DelPhoto[]) {
+    return this.wxmpService.delPhoto(body);
+  }
+
+  /** 管理分类下图片-编辑 */
+  /**   编辑时如果图片地址有变化:
+   * 1. 前端需要将新的key（文件名称）传回来。
+   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片。
+   */
+  @Put('photos/:id')
+  async updatePhoto(@Param() id: string, @Body() body: Partial<AddPhoto>) {
+    return {
+      ...body,
+      id,
+    };
   }
 
   @Get('admin/routes')
