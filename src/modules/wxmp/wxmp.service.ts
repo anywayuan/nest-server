@@ -112,13 +112,40 @@ export class WxmpService {
   }
 
   /** 根据分类ID查找 */
-  async getPhotosByAlbum(params: GetPhotosReqDto) {
-    const { page = 1, page_size = 10, pid } = params;
+  async getPhotos(params: GetPhotosReqDto) {
+    const { page = 1, page_size = 10, ...conditions } = params;
     const qb = this.photoRepository.createQueryBuilder('photo');
     qb.where('1 = 1');
-    if (pid) {
-      qb.andWhere('photo.pid = :pid', { pid });
-    }
+
+    // 定义字段和对应的查询条件
+    const fieldConditions = {
+      pid: { field: 'photo.pid', operator: '=' },
+      create_time: { field: 'photo.create_time', operator: 'between' },
+      update_time: { field: 'photo.update_time', operator: 'between' },
+    };
+
+    // 遍历 conditions 对象，根据字段动态构建查询条件
+    Object.entries(conditions).forEach(([field, value]) => {
+      const condition = fieldConditions[field];
+      if (condition) {
+        const { field: fieldName, operator } = condition;
+        if (
+          operator === 'between' &&
+          Array.isArray(value) &&
+          value.length === 2
+        ) {
+          // 处理 between 查询条件
+          qb.andWhere(`${fieldName} ${operator} :start AND :end`, {
+            start: value[0],
+            end: value[1],
+          });
+        } else {
+          // 处理其他查询条件
+          qb.andWhere(`${fieldName} ${operator} :value`, { value });
+        }
+      }
+    });
+
     qb.orderBy('photo.create_time', 'DESC');
 
     const count = await qb.getCount();
