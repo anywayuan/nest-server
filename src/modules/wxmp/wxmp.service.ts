@@ -7,6 +7,7 @@ import { AlbumDto } from './dto/album.dto';
 import { GetPhotosReqDto } from './dto/get-photos.dto';
 import { QueryAllAlbum } from './dto/get-album.dto';
 import { AddPhoto, DelPhoto } from './dto/photos.dto';
+import { OssService } from '../../oss/oss.service';
 
 export interface AlbumRes {
   list: AlbumDto[];
@@ -20,6 +21,7 @@ export class WxmpService {
     private albumsRepository: Repository<AlbumsEntity>,
     @InjectRepository(PhotoEntity)
     private photoRepository: Repository<PhotoEntity>,
+    private readonly ossService: OssService,
   ) {}
 
   /** 查询全部分类 */
@@ -158,15 +160,57 @@ export class WxmpService {
     return {};
   }
 
-  /** 管理分类下图片-删除 */
+  /**
+   * 管理分类下图片-删除
+   * 1. 根据id删除数据库记录
+   * 2. 根据key（文件名）删除 oss 资源
+   */
   async delPhoto(body: DelPhoto[]) {
     const ids = body.map((item) => item.id);
     const keys = body.map((item) => {
       return {
-        Key: item.key,
+        key: item.key,
       };
     });
-    console.log(ids, keys);
-    return body;
+    try {
+      await this.photoRepository
+        .createQueryBuilder()
+        .delete()
+        .from(PhotoEntity)
+        .where('id in (:...ids)', { ids })
+        .execute();
+      await this.ossService.delFile(keys);
+    } catch (e) {
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+    }
+    return {};
+  }
+
+  /**
+   * 管理分类下图片-编辑
+   *
+   * 编辑时如果更新图片则:
+   * 1. 前端需要将新的key（文件名称）传回来。
+   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片。
+   */
+  async editPhoto(id: string, body: Partial<AddPhoto>) {
+    const { key } = body;
+    const qb = this.photoRepository.createQueryBuilder('photo');
+    qb.where('id = :id', { id });
+    const record = await qb.getOne();
+    // 有 key: 图片重新更新了，删除oss原图片
+    if (key) {
+      await this.ossService.delFile([{ key: record.key }]);
+    }
+    // 无 key: 图片无更新
+    const res = await qb
+      .update(record)
+      .set({ ...body })
+      .execute();
+
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }
 }

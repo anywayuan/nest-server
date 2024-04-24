@@ -75,26 +75,15 @@ export class WxmpController {
   }
 
   /** 管理分类下图片-删除 */
-  /**
-   * 1. 根据id删除记录
-   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片
-   */
   @Delete('photos')
   async delPhoto(@Body() body: DelPhoto[]) {
     return this.wxmpService.delPhoto(body);
   }
 
   /** 管理分类下图片-编辑 */
-  /**   编辑时如果图片地址有变化:
-   * 1. 前端需要将新的key（文件名称）传回来。
-   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片。
-   */
   @Put('photos/:id')
-  async updatePhoto(@Param() id: string, @Body() body: Partial<AddPhoto>) {
-    return {
-      ...body,
-      id,
-    };
+  async updatePhoto(@Param('id') id: string, @Body() body: Partial<AddPhoto>) {
+    return this.wxmpService.editPhoto(id, body);
   }
 
   @Get('admin/routes')
