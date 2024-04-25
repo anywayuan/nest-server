@@ -49,8 +49,8 @@ export class WxmpController {
   @Get('photos')
   @Public()
   @ApiOperation({ summary: '根据分类获取图片' })
-  async getPhotosByAlbum(@Body() body: GetPhotosReqDto) {
-    return await this.wxmpService.getPhotos(body);
+  async getPhotos(@Query() params: GetPhotosReqDto) {
+    return await this.wxmpService.getPhotos(params);
   }
 
   /** 管理分类下图片-新增 */
