@@ -52,9 +52,32 @@ export class WxmpService {
 
   /** 获取后台路由 */
   async getAdminRoutes() {
-    return {
-      data: [],
-    };
+    return [
+      {
+        path: '/albums',
+        meta: {
+          title: '相册管理',
+          icon: 'ep:picture',
+          rank: 1,
+        },
+        children: [
+          {
+            path: '/albums/classification/index',
+            name: 'Classification',
+            meta: {
+              title: '图片分类',
+            },
+          },
+          {
+            path: '/albums/picture/index',
+            name: 'Picture',
+            meta: {
+              title: '图片管理',
+            },
+          },
+        ],
+      },
+    ];
   }
 
   /** 新增分类 */
