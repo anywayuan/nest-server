@@ -202,22 +202,11 @@ export class WxmpService {
   /** 管理分类下图片-新增 */
   async addPhoto(postData: AddPhoto) {
     const { pid, url, key } = postData;
-    let newKey: string = key;
-
-    const qb = this.photoRepository.createQueryBuilder('photo');
-    qb.where('1 = 1');
-    qb.andWhere('photo.key = :key', { key });
-
-    const count = await qb.getCount();
-
-    if (count > 0) {
-      newKey = new Date().getTime() + '.' + key;
-    }
 
     const newPhoto = this.photoRepository.create({
       pid,
       url,
-      key: newKey,
+      key,
       create_time: new Date(),
       update_time: new Date(),
     });
