@@ -15,6 +15,9 @@ export class AlbumsEntity {
   cover_url: string;
 
   @Column()
+  img_key: string;
+
+  @Column()
   del: number;
 
   @Column()

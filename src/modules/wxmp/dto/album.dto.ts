@@ -16,11 +16,17 @@ export class AlbumDto {
 
   @ApiProperty({
     description: '相册封面',
-    example:
-      'https://yuanki-1256318267.cos.ap-shanghai.myqcloud.com/light_and_you/IMG_1595.JPG',
+    example: 'https://cdn.yuanki.cn/light_and_you/IMG_1595.JPG',
   })
   @IsNotEmpty({ message: 'cover_url is required' })
   readonly cover_url: string;
+
+  @ApiProperty({
+    description: '封面Key值（用于删除oss资源）',
+    example: 'IMG_1595.JPG',
+  })
+  @IsNotEmpty({ message: 'img_key in required' })
+  readonly img_key: string;
 
   @ApiProperty({ description: '是否删除', example: 1 })
   @IsNotEmpty({ message: 'del is required' })
