@@ -127,7 +127,9 @@ export class WxmpService {
     if (res.affected === 1) {
       // 判断是否更新封面
       if (originRow.img_key !== putData.img_key) {
-        this.ossService.delFile([originRow].map((i) => ({ key: i.img_key })));
+        await this.ossService.delFile(
+          [originRow].map((i) => ({ key: i.img_key })),
+        );
       }
       return {};
     }
@@ -146,7 +148,9 @@ export class WxmpService {
       .execute();
     if (res.affected === 1) {
       // 同时删除oss中对应资源
-      this.ossService.delFile([originRow].map((i) => ({ key: i.img_key })));
+      await this.ossService.delFile(
+        [originRow].map((i) => ({ key: i.img_key })),
+      );
       return {};
     }
     throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
