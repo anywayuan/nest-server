@@ -24,6 +24,13 @@ export class WxmpService {
     private readonly ossService: OssService,
   ) {}
 
+  /** 根据id查找分类 */
+  async findOne(id: string | number) {
+    return await this.albumsRepository.findOne({
+      where: { id: Number(id) },
+    });
+  }
+
   /** 查询全部分类 */
   async getAlbumList(params: QueryAllAlbum): Promise<AlbumRes> {
     const { page = 1, page_size = 10, title, del } = params;
@@ -105,9 +112,7 @@ export class WxmpService {
 
   /** 更新分类 */
   async updateAlbum(id: string, putData: Partial<AlbumDto>) {
-    const originRow = await this.albumsRepository.findOne({
-      where: { id: Number(id) },
-    });
+    const originRow = await this.findOne(id);
 
     const res = await this.albumsRepository
       .createQueryBuilder()
