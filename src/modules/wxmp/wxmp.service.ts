@@ -105,6 +105,10 @@ export class WxmpService {
 
   /** 更新分类 */
   async updateAlbum(id: string, putData: Partial<AlbumDto>) {
+    const originRow = await this.albumsRepository.findOne({
+      where: { id: Number(id) },
+    });
+
     const res = await this.albumsRepository
       .createQueryBuilder()
       .update(AlbumsEntity)
@@ -114,7 +118,11 @@ export class WxmpService {
       })
       .where('id = :id', { id })
       .execute();
+
     if (res.affected === 1) {
+      if (originRow.img_key !== putData.img_key) {
+        this.ossService.delFile([originRow].map((i) => ({ key: i.img_key })));
+      }
       return {};
     }
     throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
