@@ -253,11 +253,11 @@ export class WxmpService {
     const qb = this.photoRepository.createQueryBuilder('photo');
     qb.where('id = :id', { id });
     const record = await qb.getOne();
-    // 有 key: 图片重新更新了，删除oss原图片
-    if (key) {
+
+    if (key !== record.key) {
       await this.ossService.delFile([{ key: record.key }]);
     }
-    // 无 key: 图片无更新
+
     const res = await qb
       .update(record)
       .set({ ...body })
