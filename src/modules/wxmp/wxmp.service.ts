@@ -25,6 +25,35 @@ export class WxmpService {
     private readonly ossService: OssService,
   ) {}
 
+  /** 获取后台路由 */
+  async getAdminRoutes() {
+    return [
+      {
+        path: '/albums',
+        meta: {
+          title: '相册管理',
+          icon: 'ep:picture',
+          rank: 1,
+        },
+        children: [
+          {
+            path: '/albums/classification/index',
+            name: 'Classification',
+            meta: {
+              title: '图片分类',
+            },
+          },
+          {
+            path: '/albums/picture/index',
+            name: 'Picture',
+            meta: {
+              title: '图片管理',
+            },
+          },
+        ],
+      },
+    ];
+  }
   /** 根据id查找分类 */
   async findOne(id: string | number) {
     return await this.albumsRepository.findOne({
@@ -58,36 +87,6 @@ export class WxmpService {
     };
   }
 
-  /** 获取后台路由 */
-  async getAdminRoutes() {
-    return [
-      {
-        path: '/albums',
-        meta: {
-          title: '相册管理',
-          icon: 'ep:picture',
-          rank: 1,
-        },
-        children: [
-          {
-            path: '/albums/classification/index',
-            name: 'Classification',
-            meta: {
-              title: '图片分类',
-            },
-          },
-          {
-            path: '/albums/picture/index',
-            name: 'Picture',
-            meta: {
-              title: '图片管理',
-            },
-          },
-        ],
-      },
-    ];
-  }
-
   /** 新增分类 */
   async addAlbum(postData: AlbumDto) {
     const { title, zh_title } = postData;
@@ -106,9 +105,13 @@ export class WxmpService {
       create_time: new Date(),
       update_time: new Date(),
     });
-    await this.albumsRepository.save(newAlbum);
-
-    return {};
+    const res = await this.albumsRepository.save(newAlbum);
+    const newPhotoParams = {
+      pid: res.id,
+      url: postData.cover_url,
+      key: postData.img_key,
+    };
+    return this.addPhoto(newPhotoParams);
   }
 
   /** 更新分类 */
