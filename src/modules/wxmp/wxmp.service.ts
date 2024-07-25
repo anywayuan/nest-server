@@ -266,24 +266,19 @@ export class WxmpService {
 
   /**
    * 管理分类下图片-编辑
-   *
-   * 编辑时如果更新图片则:
-   * 1. 前端需要将新的key（文件名称）传回来。
-   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片。
+   * 只修改所属分类
    */
   async editPhoto(id: string, body: Partial<AddPhoto>) {
-    const { key } = body;
     const qb = this.photoRepository.createQueryBuilder('photo');
     qb.where('id = :id', { id });
     const record = await qb.getOne();
 
-    if (key !== record.key) {
-      await this.ossService.delFile([{ key: record.key }]);
-    }
-
     const res = await qb
       .update(record)
-      .set({ ...body })
+      .set({
+        pid: body.pid,
+        update_time: new Date(),
+      })
       .execute();
 
     if (res.affected === 1) {
