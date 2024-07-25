@@ -19,7 +19,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { RedisModule } from './db/redis/redis.module';
-import { PostsModule } from './modules/posts/posts.module';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FuckModule } from './modules/fuck/fuck.module';
@@ -72,7 +71,6 @@ import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
       ],
     }),
     ScheduleModule.forRoot(),
-    PostsModule,
     UserModule,
     AuthModule,
     RedisModule,
