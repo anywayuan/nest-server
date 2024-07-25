@@ -164,10 +164,12 @@ export class WxmpService {
       .where('id = :id', { id })
       .execute();
     if (res.affected === 1) {
-      // 同时删除oss中对应资源
+      // 同时删除oss中对应资源 及 photos 表中所有 pid = id 的记录
       await this.ossService.delFile(
         [originRow].map((i) => ({ key: i.img_key })),
       );
+      const { list } = await this.getPhotos({ pid: id });
+      await this.delPhoto(list);
       return {};
     }
     throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);

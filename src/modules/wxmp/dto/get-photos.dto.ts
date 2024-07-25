@@ -23,7 +23,7 @@ export class GetPhotosReqDto {
   readonly page_size?: number;
 
   @ApiProperty({ description: '分类id', example: 1 })
-  readonly pid?: number;
+  readonly pid?: number | string;
 
   @ApiProperty({
     description: '创建时间范围',
