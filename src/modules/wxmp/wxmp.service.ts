@@ -25,6 +25,35 @@ export class WxmpService {
     private readonly ossService: OssService,
   ) {}
 
+  /** 获取后台路由 */
+  async getAdminRoutes() {
+    return [
+      {
+        path: '/albums',
+        meta: {
+          title: '相册管理',
+          icon: 'ep:picture',
+          rank: 1,
+        },
+        children: [
+          {
+            path: '/albums/classification/index',
+            name: 'Classification',
+            meta: {
+              title: '图片分类',
+            },
+          },
+          {
+            path: '/albums/picture/index',
+            name: 'Picture',
+            meta: {
+              title: '图片管理',
+            },
+          },
+        ],
+      },
+    ];
+  }
   /** 根据id查找分类 */
   async findOne(id: string | number) {
     return await this.albumsRepository.findOne({
@@ -58,36 +87,6 @@ export class WxmpService {
     };
   }
 
-  /** 获取后台路由 */
-  async getAdminRoutes() {
-    return [
-      {
-        path: '/albums',
-        meta: {
-          title: '相册管理',
-          icon: 'ep:picture',
-          rank: 1,
-        },
-        children: [
-          {
-            path: '/albums/classification/index',
-            name: 'Classification',
-            meta: {
-              title: '图片分类',
-            },
-          },
-          {
-            path: '/albums/picture/index',
-            name: 'Picture',
-            meta: {
-              title: '图片管理',
-            },
-          },
-        ],
-      },
-    ];
-  }
-
   /** 新增分类 */
   async addAlbum(postData: AlbumDto) {
     const { title, zh_title } = postData;
@@ -106,9 +105,13 @@ export class WxmpService {
       create_time: new Date(),
       update_time: new Date(),
     });
-    await this.albumsRepository.save(newAlbum);
-
-    return {};
+    const res = await this.albumsRepository.save(newAlbum);
+    const newPhotoParams = {
+      pid: res.id,
+      url: postData.cover_url,
+      key: postData.img_key,
+    };
+    return this.addPhoto(newPhotoParams);
   }
 
   /** 更新分类 */
@@ -126,11 +129,24 @@ export class WxmpService {
       .execute();
 
     if (res.affected === 1) {
-      // 判断是否更新封面
+      /** 如果封面更新则删除原oss资源，以及photos中的记录  */
       if (originRow.img_key !== putData.img_key) {
+        // 删除原oss资源
         await this.ossService.delFile(
           [originRow].map((i) => ({ key: i.img_key })),
         );
+        // 根据 originRow.img_key 更新 photos 中的记录
+        await this.photoRepository
+          .createQueryBuilder()
+          .update(PhotoEntity)
+          .set({
+            key: putData.img_key,
+            url: putData.cover_url,
+            update_time: new Date(),
+          })
+          .where('key = :key', { key: originRow.img_key })
+          .execute();
+        return {};
       }
       return {};
     }
@@ -148,10 +164,12 @@ export class WxmpService {
       .where('id = :id', { id })
       .execute();
     if (res.affected === 1) {
-      // 同时删除oss中对应资源
+      // 同时删除oss中对应资源 及 photos 表中所有 pid = id 的记录
       await this.ossService.delFile(
         [originRow].map((i) => ({ key: i.img_key })),
       );
+      const { list } = await this.getPhotos({ pid: id });
+      await this.delPhoto(list);
       return {};
     }
     throw new HttpException('删除失败', HttpStatus.BAD_REQUEST);
@@ -248,24 +266,19 @@ export class WxmpService {
 
   /**
    * 管理分类下图片-编辑
-   *
-   * 编辑时如果更新图片则:
-   * 1. 前端需要将新的key（文件名称）传回来。
-   * 2. 根据当前id查询到旧key调用oss删除模块删除原图片。
+   * 只修改所属分类
    */
   async editPhoto(id: string, body: Partial<AddPhoto>) {
-    const { key } = body;
     const qb = this.photoRepository.createQueryBuilder('photo');
     qb.where('id = :id', { id });
     const record = await qb.getOne();
 
-    if (key !== record.key) {
-      await this.ossService.delFile([{ key: record.key }]);
-    }
-
     const res = await qb
       .update(record)
-      .set({ ...body })
+      .set({
+        pid: body.pid,
+        update_time: new Date(),
+      })
       .execute();
 
     if (res.affected === 1) {
