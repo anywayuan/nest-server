@@ -12,17 +12,16 @@ export class ScheduleService {
 
   @Cron('30 10 0 * * *')
   async handleCron() {
-    console.log('定时任务-开始');
-    this.AutoSignToJJ();
+    const jjRes = await this.AutoSignToJJ();
     // this.AutoSignToZM();
-    await this.AutoDownloadBingWallpaperByEveryDay();
-    console.log('定时任务-结束');
+    const bingRes = await this.AutoDownloadBingWallpaperByEveryDay();
+    return Object.assign(jjRes, bingRes);
   }
 
   /**
    * @description: 掘金自动签到
    */
-  AutoSignToJJ() {
+  async AutoSignToJJ() {
     const options = {
       url: juejin.url,
       method: 'post',
@@ -30,9 +29,10 @@ export class ScheduleService {
         cookie: 'sessionid=' + juejin.sessionid,
       },
     };
-    firstValueFrom(this.httpService.request(options)).then((res) => {
-      console.log('掘金自动：', res.data);
-    });
+    const res = await firstValueFrom(this.httpService.request(options));
+    return {
+      juejin: res.data,
+    }
   }
 
   /**
@@ -100,5 +100,9 @@ export class ScheduleService {
       `./bing/${folderName}/${fileName}.jpeg`,
       Buffer.from(response.data),
     );
+
+    return {
+      bing: response.statusText
+    }
   }
 }
