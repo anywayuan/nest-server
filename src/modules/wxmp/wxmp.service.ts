@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
 import { AlbumsEntity } from './entities/album.entity';
 import { PhotoEntity } from './entities/photo.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { AlbumDto } from './dto/album.dto';
 import { GetPhotosReqDto } from './dto/get-photos.dto';
 import { QueryAllAlbum } from './dto/get-album.dto';

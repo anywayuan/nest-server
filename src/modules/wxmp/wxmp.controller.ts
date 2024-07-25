@@ -8,39 +8,38 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { WxmpService } from './wxmp.service';
 import { Public } from 'src/global/decorator/public.decorator';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { WxmpService } from './wxmp.service';
 import { QueryAllAlbum } from './dto/get-album.dto';
 import { GetPhotosReqDto } from './dto/get-photos.dto';
 import { AlbumDto } from './dto/album.dto';
 import { AddPhoto, DelPhoto } from './dto/photos.dto';
-@ApiTags('wxmp')
+
 @Controller('wxmp')
 export class WxmpController {
   constructor(private readonly wxmpService: WxmpService) {}
 
+  /** 获取分类 */
   @Get('albums')
   @Public()
-  @ApiOperation({ summary: '图片分类' })
   async getAlbumList(@Query() params: QueryAllAlbum) {
     return await this.wxmpService.getAlbumList(params);
   }
 
+  /** 添加分类 */
   @Post('albums')
-  @ApiOperation({ summary: '添加分类' })
   async addAlbum(@Body() body: AlbumDto) {
     return await this.wxmpService.addAlbum(body);
   }
 
+  /** 更新分类 */
   @Put('albums/:id')
-  @ApiOperation({ summary: '更新分类' })
   async updateAlbum(@Param('id') id: string, @Body() body: Partial<AlbumDto>) {
     return await this.wxmpService.updateAlbum(id, body);
   }
 
+  /** 删除分类 */
   @Delete('albums/:id')
-  @ApiOperation({ summary: '删除分类' })
   async deleteAlbum(@Param('id') id: string) {
     return await this.wxmpService.deleteAlbum(id);
   }
@@ -48,7 +47,6 @@ export class WxmpController {
   /** 管理分类下图片-列表 */
   @Get('photos')
   @Public()
-  @ApiOperation({ summary: '根据分类获取图片' })
   async getPhotos(@Query() params: GetPhotosReqDto) {
     return await this.wxmpService.getPhotos(params);
   }
@@ -71,6 +69,7 @@ export class WxmpController {
     return this.wxmpService.editPhoto(id, body);
   }
 
+  /** 路由菜单 */
   @Get('admin/routes')
   async getAdminRoutes() {
     return await this.wxmpService.getAdminRoutes();
