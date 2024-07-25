@@ -129,11 +129,24 @@ export class WxmpService {
       .execute();
 
     if (res.affected === 1) {
-      // 判断是否更新封面
+      /** 如果封面更新则删除原oss资源，以及photos中的记录  */
       if (originRow.img_key !== putData.img_key) {
+        // 删除原oss资源
         await this.ossService.delFile(
           [originRow].map((i) => ({ key: i.img_key })),
         );
+        // 根据 originRow.img_key 更新 photos 中的记录
+        await this.photoRepository
+          .createQueryBuilder()
+          .update(PhotoEntity)
+          .set({
+            key: putData.img_key,
+            url: putData.cover_url,
+            update_time: new Date(),
+          })
+          .where('key = :key', { key: originRow.img_key })
+          .execute();
+        return {};
       }
       return {};
     }
