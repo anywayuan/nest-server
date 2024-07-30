@@ -84,18 +84,25 @@ export class OssService {
 
   /** 上传文件 */
   async upload(@UploadedFile() file: Express.Multer.File) {
+    const { originalname, size, mimetype } = file;
+
     const { statusCode } = (await this.checkOssObject(
-      `album/${file.originalname}`,
+      `album/${originalname}`,
     )) as unknown as { statusCode: number };
+
+    const COSFS_RESOURCES_URL: string = this.configService.get<string>(
+      'COSFS_RESOURCES_URL',
+    );
+    const url: string = `${COSFS_RESOURCES_URL}${originalname}`;
 
     // 文件已存在 返回文件信息
     if (statusCode === 200) {
       return {
-        filename: file.originalname,
-        size: file.size,
-        type: file.mimetype,
+        filename: originalname,
+        size,
+        type: mimetype,
         date: new Date(),
-        url: `https://cdn.yuanki.cn/album/${file.originalname}`,
+        url,
       };
     }
 
@@ -110,12 +117,6 @@ export class OssService {
           console.log('file removed');
         }
       });
-
-      const COSFS_RESOURCES_URL: string = this.configService.get<string>(
-        'COSFS_RESOURCES_URL',
-      );
-      const { originalname, size, mimetype } = file;
-      const url: string = `${COSFS_RESOURCES_URL}${originalname}`;
 
       return {
         filename: originalname,
