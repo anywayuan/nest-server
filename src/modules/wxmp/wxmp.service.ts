@@ -54,6 +54,7 @@ export class WxmpService {
       },
     ];
   }
+
   /** 根据id查找分类 */
   async findOne(id: string | number) {
     return await this.albumsRepository.findOne({
