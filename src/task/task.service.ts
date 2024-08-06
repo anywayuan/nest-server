@@ -12,10 +12,10 @@ export class ScheduleService {
 
   @Cron('30 10 0 * * *')
   async handleCron() {
-    const jjRes = await this.AutoSignToJJ();
+    // const jjRes = await this.AutoSignToJJ();
     // this.AutoSignToZM();
     const bingRes = await this.AutoDownloadBingWallpaperByEveryDay();
-    return Object.assign(jjRes, bingRes);
+    return Object.assign({}, bingRes);
   }
 
   /**
@@ -32,7 +32,7 @@ export class ScheduleService {
     const res = await firstValueFrom(this.httpService.request(options));
     return {
       juejin: res.data,
-    }
+    };
   }
 
   /**
@@ -102,7 +102,7 @@ export class ScheduleService {
     );
 
     return {
-      bing: response.statusText
-    }
+      bing: response.statusText,
+    };
   }
 }
