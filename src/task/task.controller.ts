@@ -1,4 +1,3 @@
-import { ApiTags } from '@nestjs/swagger';
 import { Controller, Get } from '@nestjs/common';
 import { ScheduleService } from './task.service';
 import { Public } from '../global/decorator/public.decorator';
