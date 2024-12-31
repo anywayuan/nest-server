@@ -1,4 +1,3 @@
-import { ApiTags } from '@nestjs/swagger';
 import {
   Body,
   Controller,
@@ -13,7 +12,6 @@ import { Public } from '../global/decorator/public.decorator';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { DelMultipleObject } from './types';
 
-@ApiTags('oss')
 @Controller()
 export class OssController {
   constructor(private readonly ossService: OssService) {}
