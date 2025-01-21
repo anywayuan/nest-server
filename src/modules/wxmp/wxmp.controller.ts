@@ -8,7 +8,6 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { Public } from 'src/global/decorator/public.decorator';
 import { WxmpService } from './wxmp.service';
 import { QueryAllAlbum } from './dto/get-album.dto';
@@ -16,7 +15,6 @@ import { GetPhotosReqDto } from './dto/get-photos.dto';
 import { AlbumDto } from './dto/album.dto';
 import { AddPhoto, DelPhoto } from './dto/photos.dto';
 
-@ApiTags('wxmp/admin')
 @Controller('wxmp')
 export class WxmpController {
   constructor(private readonly wxmpService: WxmpService) {}
