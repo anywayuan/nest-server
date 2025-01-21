@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Get,
+} from '@nestjs/common';
 import { FuckService } from './fuck.service';
 import { CreateFuckDto, CreateFuckResDto } from './dto/create-fuck.dto';
 import { GetFuckResDto } from './dto/get-fuck.dto';
@@ -42,5 +50,10 @@ export class FuckController {
   @ApiResponse({ status: 200, description: 'success', type: DelFuckResDto })
   remove(@Param('id') id: string) {
     return this.fuckService.remove(+id);
+  }
+
+  @Get()
+  findAll(@Param() params: { page: number; page_size: number }) {
+    return this.fuckService.findAll(params);
   }
 }
