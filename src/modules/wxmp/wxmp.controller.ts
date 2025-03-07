@@ -19,11 +19,18 @@ import { AddPhoto, DelPhoto } from './dto/photos.dto';
 export class WxmpController {
   constructor(private readonly wxmpService: WxmpService) {}
 
-  /** 获取分类 */
+  /** 获取分类-后台管理 */
   @Get('albums')
   @Public()
   async getAlbumList(@Query() params: QueryAllAlbum) {
     return await this.wxmpService.getAlbumList(params);
+  }
+
+  /** 获取分类-前台展示 */
+  @Get('front/albums')
+  @Public()
+  async getFrontAlbumList(@Query() params: QueryAllAlbum) {
+    return await this.wxmpService.getFrontAlbumList(params);
   }
 
   /** 添加分类 */
@@ -40,11 +47,14 @@ export class WxmpController {
 
   /** 更新分类状态 */
   @Put('albums/:id/update-status')
-  async updateAlbumStatus(
-    @Param('id') id: number,
-    @Body() body: { status: number },
-  ) {
-    return await this.wxmpService.updateAlbumStatus(id, body);
+  async updateAlbumStatus(@Param('id') id: number) {
+    return await this.wxmpService.updateAlbumStatus(id);
+  }
+
+  /** 更新加密状态 */
+  @Put('albums/:id/update-isLock')
+  async updateAlbumIsLock(@Param('id') id: number) {
+    return await this.wxmpService.updateAlbumIsLock(id);
   }
 
   /** 删除分类 */

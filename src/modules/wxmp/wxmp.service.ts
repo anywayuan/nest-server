@@ -11,7 +11,7 @@ import { AddPhoto, DelPhoto } from './dto/photos.dto';
 import { OssService } from '../../oss/oss.service';
 
 export interface AlbumRes {
-  list: AlbumDto[];
+  list: AlbumsEntity[];
   count: number;
 }
 
@@ -76,6 +76,25 @@ export class WxmpService {
     if (del) {
       qb.andWhere('albums.del = :del', { del });
     }
+    qb.limit(page_size);
+    qb.offset(page_size * (page - 1));
+
+    const count = await qb.getCount();
+    const albums = await qb.getMany();
+
+    return {
+      list: albums,
+      count,
+    };
+  }
+
+  /** 查询全部分类-前台展示 */
+  async getFrontAlbumList(params: QueryAllAlbum): Promise<AlbumRes> {
+    console.log(params);
+    const { page = 1, page_size = 10 } = params;
+    const qb = this.albumsRepository.createQueryBuilder('albums');
+    qb.where('1 = 1');
+    qb.andWhere('albums.del = :del', { del: 1 });
     qb.limit(page_size);
     qb.offset(page_size * (page - 1));
 
@@ -155,13 +174,41 @@ export class WxmpService {
   }
 
   /** 更新分类状态 */
-  async updateAlbumStatus(id: number, data: { status: number }) {
-    const { status } = data;
+  async updateAlbumStatus(id: number) {
+    const originRow = await this.findOne(id);
+    if (!originRow) {
+      throw new HttpException('记录不存在', HttpStatus.BAD_REQUEST);
+    }
+    const status = originRow.del === 1 ? 0 : 1;
+
     const res = await this.albumsRepository
       .createQueryBuilder()
       .update(AlbumsEntity)
       .set({
         del: status,
+        update_time: new Date(),
+      })
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
+  }
+
+  /** 更新加密状态 */
+  async updateAlbumIsLock(id: number) {
+    const originRow = await this.findOne(id);
+    if (!originRow) {
+      throw new HttpException('记录不存在', HttpStatus.BAD_REQUEST);
+    }
+    const status = originRow.is_lock === 1 ? 0 : 1;
+
+    const res = await this.albumsRepository
+      .createQueryBuilder()
+      .update(AlbumsEntity)
+      .set({
+        is_lock: status,
         update_time: new Date(),
       })
       .where('id = :id', { id })
