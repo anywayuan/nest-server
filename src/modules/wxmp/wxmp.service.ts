@@ -154,6 +154,24 @@ export class WxmpService {
     throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }
 
+  /** 更新分类状态 */
+  async updateAlbumStatus(id: number, data: { status: number }) {
+    const { status } = data;
+    const res = await this.albumsRepository
+      .createQueryBuilder()
+      .update(AlbumsEntity)
+      .set({
+        del: status,
+        update_time: new Date(),
+      })
+      .where('id = :id', { id })
+      .execute();
+    if (res.affected === 1) {
+      return {};
+    }
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
+  }
+
   /** 删除分类 */
   async deleteAlbum(id: string) {
     const originRow = await this.findOne(id);

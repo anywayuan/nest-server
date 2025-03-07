@@ -38,6 +38,15 @@ export class WxmpController {
     return await this.wxmpService.updateAlbum(id, body);
   }
 
+  /** 更新分类状态 */
+  @Put('albums/:id/update-status')
+  async updateAlbumStatus(
+    @Param('id') id: number,
+    @Body() body: { status: number },
+  ) {
+    return await this.wxmpService.updateAlbumStatus(id, body);
+  }
+
   /** 删除分类 */
   @Delete('albums/:id')
   async deleteAlbum(@Param('id') id: string) {
