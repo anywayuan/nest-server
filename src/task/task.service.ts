@@ -12,10 +12,10 @@ export class ScheduleService {
 
   @Cron('30 10 0 * * *')
   async handleCron() {
-    // const jjRes = await this.AutoSignToJJ();
+    const jjRes = await this.AutoSignToJJ();
     // this.AutoSignToZM();
     const bingRes = await this.AutoDownloadBingWallpaperByEveryDay();
-    return Object.assign({}, bingRes);
+    return Object.assign({}, jjRes, bingRes);
   }
 
   /**
@@ -27,6 +27,17 @@ export class ScheduleService {
       method: 'post',
       headers: {
         cookie: 'sessionid=' + juejin.sessionid,
+        Origin: 'https://juejin.cn',
+        Referer: 'https://juejin.cn/',
+        'sec-ch-ua':
+          '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'cross-site',
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
       },
     };
     const res = await firstValueFrom(this.httpService.request(options));
