@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
-import { juejin, zm, bing } from '../../config/autoScriptConf';
+import { juejin, bing } from '../../config/autoScriptConf';
 import * as dayjs from 'dayjs';
 import { shuffleArray } from '../utils';
 
@@ -13,12 +13,13 @@ export class ScheduleService {
 
   @Cron('0 0 6 * * *')
   async handleCron() {
+    const bingRes = await this.AutoDownloadBingWallpaperByEveryDay();
+
     const maxDelay = 3 * 60 * 60 * 1000;
     const randomDelay = Math.floor(Math.random() * maxDelay);
     await new Promise((resolve) => setTimeout(resolve, randomDelay));
-
     const jjRes = await this.AutoSignToJJ();
-    const bingRes = await this.AutoDownloadBingWallpaperByEveryDay();
+
     return Object.assign({}, jjRes, bingRes);
   }
 
@@ -72,27 +73,6 @@ export class ScheduleService {
     return {
       juejin: results,
     };
-  }
-
-  /**
-   * @description: 钻芒自动签到
-   */
-  AutoSignToZM() {
-    const formData = new FormData();
-    formData.append('action', zm.action);
-
-    const options = {
-      url: zm.url,
-      method: 'post',
-      headers: {
-        cookie: zm.cookie,
-      },
-      data: formData,
-    };
-
-    firstValueFrom(this.httpService.request(options)).then((res) => {
-      console.log('钻芒自动签到：', res.data);
-    });
   }
 
   /**

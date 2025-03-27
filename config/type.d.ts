@@ -5,3 +5,8 @@ export type JuejinAutoSignParams = {
     sessionid: string;
   }[];
 };
+
+export type BingDownloadParams = {
+  base: string;
+  reqUrl: string;
+};
