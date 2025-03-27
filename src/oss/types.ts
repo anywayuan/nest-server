@@ -33,3 +33,10 @@ export type DelMultipleObject = {
   VersionId?: string; // 要删除的对象版本 ID 或 DeleteMarker 版本 ID
   id?: number; // 记录id
 };
+
+export type CosFileItem = {
+  Bucket: string;
+  Region: string;
+  Key: string;
+  FilePath: string;
+};

@@ -1,6 +1,7 @@
 import {
   Injectable,
   UploadedFile,
+  UploadedFiles,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -8,7 +9,8 @@ import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
 import COS = require('cos-nodejs-sdk-v5');
 
-import { DelFileRes, DelMultipleObject } from './types';
+import { DelFileRes, DelMultipleObject, CosFileItem } from './types';
+import { CosError } from 'cos-nodejs-sdk-v5';
 
 @Injectable()
 export class OssService {
@@ -146,5 +148,54 @@ export class OssService {
     }
 
     throw new HttpException('oss資源删除失败', HttpStatus.BAD_REQUEST);
+  }
+
+  /** 批量上传 */
+  async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+    const cosFiles: Array<CosFileItem> = [];
+
+    files.forEach((file) => {
+      fs.writeFileSync(`./uploads/${file.originalname}`, file.buffer);
+
+      const cosFilesConf = {
+        Bucket: this.configService.get<string>('COSFS_BUCKET'),
+        Region: this.configService.get<string>('COSFS_REGION'),
+        Key: `album/${file.originalname}`,
+        FilePath: `./uploads/${file.originalname}`,
+      };
+
+      cosFiles.push(cosFilesConf);
+    });
+
+    this.cos.uploadFiles({
+      files: cosFiles,
+      SliceSize: 1024 * 1024 * 10, // 设置大于10MB采用分块上传
+      onProgress: function (info) {
+        const percent = parseInt(String(info.percent * 10000)) / 100;
+        const speed = parseInt(String((info.speed / 1024 / 1024) * 100)) / 100;
+        console.log('进度：' + percent + '%; 速度：' + speed + 'Mb/s;');
+      },
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      onFileFinish: function (
+        err: CosError,
+        data: Record<string, any>,
+        options: { Key: string },
+      ) {
+        console.log(options.Key + '上传' + (err ? '失败' : '完成'));
+      },
+    });
+
+    const COSFS_RESOURCES_URL: string = this.configService.get<string>(
+      'COSFS_RESOURCES_URL',
+    );
+
+    return files.map((file) => ({
+      filename: file.originalname,
+      size: file.size,
+      type: file.mimetype,
+      date: new Date(),
+      url: `${COSFS_RESOURCES_URL}${file.originalname}`,
+    }));
   }
 }

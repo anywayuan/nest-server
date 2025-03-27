@@ -5,33 +5,72 @@ import { firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
 import { juejin, zm, bing } from '../../config/autoScriptConf';
 import * as dayjs from 'dayjs';
+import { shuffleArray } from '../utils';
 
 @Injectable()
 export class ScheduleService {
   constructor(private readonly httpService: HttpService) {}
 
-  @Cron('30 10 0 * * *')
+  @Cron('0 0 6 * * *')
   async handleCron() {
-    // const jjRes = await this.AutoSignToJJ();
-    // this.AutoSignToZM();
+    const maxDelay = 3 * 60 * 60 * 1000;
+    const randomDelay = Math.floor(Math.random() * maxDelay);
+    await new Promise((resolve) => setTimeout(resolve, randomDelay));
+
+    const jjRes = await this.AutoSignToJJ();
     const bingRes = await this.AutoDownloadBingWallpaperByEveryDay();
-    return Object.assign({}, bingRes);
+    return Object.assign({}, jjRes, bingRes);
   }
 
   /**
    * @description: 掘金自动签到
    */
   async AutoSignToJJ() {
+    const { sessionids, url } = juejin;
     const options = {
-      url: juejin.url,
+      url,
       method: 'post',
       headers: {
-        cookie: 'sessionid=' + juejin.sessionid,
+        cookie: '',
+        Origin: 'https://juejin.cn',
+        Referer: 'https://juejin.cn/',
+        'sec-ch-ua':
+          '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"macOS"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'cross-site',
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
       },
     };
-    const res = await firstValueFrom(this.httpService.request(options));
+
+    const shuffled = shuffleArray(sessionids);
+    const results = [];
+    await shuffled.reduce(async (prevPromise, item, index) => {
+      await prevPromise;
+      if (index > 0) {
+        await new Promise((resolve) => setTimeout(resolve, 60000));
+      }
+      options.headers.cookie = `sessionid=${item.sessionid}`;
+      const res = await firstValueFrom(this.httpService.request(options));
+      results.push({
+        name: item.name,
+        data: res.data,
+        signInTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      });
+      return Promise.resolve();
+    }, Promise.resolve());
+
+    console.log(
+      '本次掘金签到结果: ',
+      dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      results,
+    );
+
     return {
-      juejin: res.data,
+      juejin: results,
     };
   }
 

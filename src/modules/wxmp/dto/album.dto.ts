@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsInt } from 'class-validator';
-import { BaseResDto } from 'src/base/dto/base.dto';
 
 export class AlbumDto {
   @ApiProperty({ description: 'id', example: 1 })
@@ -33,6 +32,11 @@ export class AlbumDto {
   @IsInt({ message: 'del must be an integer 0 or 1' })
   readonly del: number;
 
+  @IsInt({ message: 'isLock must be an integer 0 or 1' })
+  readonly is_lock: number;
+
+  readonly password: string;
+
   @ApiProperty({
     description: '创建时间',
     example: '2024-01-12T07:38:49.000Z',
@@ -44,9 +48,4 @@ export class AlbumDto {
     example: '2024-01-12T07:38:49.000Z',
   })
   readonly update_time: Date;
-}
-
-export class CreateAlbumsResDto extends BaseResDto {
-  @ApiProperty({ description: 'data', type: Object })
-  readonly data: Record<any, any>;
 }

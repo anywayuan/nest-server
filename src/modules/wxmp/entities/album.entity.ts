@@ -21,6 +21,12 @@ export class AlbumsEntity {
   del: number;
 
   @Column()
+  is_lock: number;
+
+  @Column({ select: false })
+  password: string;
+
+  @Column()
   create_time: Date;
 
   @Column()

@@ -24,8 +24,18 @@ export class FuckService {
     return await this.fuckRepository.save(newText);
   }
 
-  findAll() {
-    return `This action returns all fuck`;
+  async findAll(params: { page: number; page_size: number }) {
+    const { page = 1, page_size = 10 } = params;
+    const qb = this.fuckRepository.createQueryBuilder('fuck');
+    qb.where('1 = 1');
+    qb.orderBy('fuck.id', 'DESC');
+    qb.skip((page - 1) * page_size);
+    qb.take(page_size);
+    const [list, total] = await qb.getManyAndCount();
+    return {
+      list,
+      total,
+    };
   }
 
   async findRandomOne(params: { ids: number[] }) {
