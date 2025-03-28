@@ -64,6 +64,12 @@ export class ScheduleService {
       return Promise.resolve();
     }, Promise.resolve());
 
+    console.log(
+      '本次掘金签到结果: ',
+      dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      results,
+    );
+
     return {
       juejin: results,
     };
