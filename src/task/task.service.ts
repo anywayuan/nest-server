@@ -17,17 +17,24 @@ export class ScheduleService {
 
     const maxDelay = 3 * 60 * 60 * 1000;
     const randomDelay = Math.floor(Math.random() * maxDelay);
+
+    console.log(
+      '预计开始执行任务时间: ',
+      dayjs().add(randomDelay, 'ms').format('YYYY-MM-DD HH:mm:ss'),
+    );
+
     await new Promise((resolve) => setTimeout(resolve, randomDelay));
+
+    console.log('开始执行任务: ', dayjs().format('YYYY-MM-DD HH:mm:ss'));
+
     const jjRes = await this.AutoSignToJJ();
 
     return Object.assign({}, jjRes, bingRes);
   }
 
-  /**
-   * @description: 掘金自动签到
-   */
+  /** @description: 掘金自动签到 */
   async AutoSignToJJ() {
-    const { sessionids, url } = juejin;
+    const { sessionids, url, baseHeaders } = juejin;
     const options = {
       url,
       method: 'post',
@@ -35,15 +42,7 @@ export class ScheduleService {
         cookie: '',
         Origin: 'https://juejin.cn',
         Referer: 'https://juejin.cn/',
-        'sec-ch-ua':
-          '"Chromium";v="134", "Not:A-Brand";v="24", "Google Chrome";v="134"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"macOS"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'cross-site',
-        'User-Agent':
-          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
+        ...baseHeaders,
       },
     };
 
@@ -58,26 +57,25 @@ export class ScheduleService {
       const res = await firstValueFrom(this.httpService.request(options));
       results.push({
         name: item.name,
-        data: res.data,
+        data: {
+          err_no: res.data.err_no,
+          err_msg: res.data.err_msg,
+          incr_point: res.data.data?.incr_point,
+          sum_point: res.data.data?.sum_point,
+        },
         signInTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       });
       return Promise.resolve();
     }, Promise.resolve());
 
-    console.log(
-      '本次掘金签到结果: ',
-      dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      results,
-    );
+    console.log('本次任务执行结果: ', results);
 
     return {
       juejin: results,
     };
   }
 
-  /**
-   * @description: 必应壁纸每日下载
-   */
+  /** @description: 必应壁纸每日下载 */
   async AutoDownloadBingWallpaperByEveryDay() {
     type TodayWallpaper = {
       url: string;
