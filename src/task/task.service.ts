@@ -6,10 +6,14 @@ import * as fs from 'fs';
 import { juejin, bing } from '../../config/autoScriptConf';
 import * as dayjs from 'dayjs';
 import { shuffleArray } from '../utils';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ScheduleService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private readonly emailService: EmailService,
+  ) {}
 
   @Cron('0 0 6 * * *')
   async handleCron() {
@@ -55,7 +59,7 @@ export class ScheduleService {
       }
       options.headers.cookie = `sessionid=${item.sessionid}`;
       const res = await firstValueFrom(this.httpService.request(options));
-      results.push({
+      const obj = {
         name: item.name,
         data: {
           err_no: res.data.err_no,
@@ -64,7 +68,15 @@ export class ScheduleService {
           sum_point: res.data.data?.sum_point,
         },
         signInTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      });
+      };
+      results.push(obj);
+      await this.emailService.sendExecutionResult(
+        JSON.stringify(obj, null, 2),
+        {
+          to: item.email,
+          isError: res.data.err_no === 0 ? false : true,
+        },
+      );
       return Promise.resolve();
     }, Promise.resolve());
 

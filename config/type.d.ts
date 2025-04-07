@@ -4,6 +4,7 @@ export type JuejinAutoSignParams = {
   sessionids: {
     name: string;
     sessionid: string;
+    email: string;
   }[];
 };
 

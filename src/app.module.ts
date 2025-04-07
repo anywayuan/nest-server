@@ -6,6 +6,11 @@ import { WinstonModule } from 'nest-winston';
 import 'winston-daily-rotate-file';
 import { transports, format } from 'winston';
 import { ScheduleModule } from '@nestjs/schedule';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import handlebarsLayouts = require('handlebars-layouts');
+import handlebars from 'handlebars';
 
 import envConfig from '../config/env';
 
@@ -25,6 +30,14 @@ import { FuckModule } from './modules/fuck/fuck.module';
 import { OssModule } from './oss/oss.module';
 import { TaskModule } from './task/task.module';
 import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
+import { EmailModule } from './email/email.module';
+
+import { read } from './utils';
+
+const hbsInstance = handlebarsLayouts.register(handlebars);
+handlebars.registerPartial({
+  layout: read('main.hbs'),
+});
 
 @Module({
   imports: [
@@ -71,6 +84,29 @@ import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
       ],
     }),
     ScheduleModule.forRoot(),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          host: configService.get('QQ_EMAIL_HOST'),
+          port: configService.get('QQ_EMAIL_PORT'),
+          secure: true, // 使用 SSL
+          auth: {
+            user: configService.get('QQ_EMAIL_SENDER'),
+            pass: configService.get('QQ_EMAIL_AUTH_CODE'),
+          },
+        },
+        defaults: {
+          from: `"梁予安" <${configService.get('QQ_EMAIL_SENDER')}>`,
+        },
+        template: {
+          dir: join(process.cwd(), 'src/templates/partials'),
+          adapter: new HandlebarsAdapter({ extend: hbsInstance.extend }),
+          options: { extname: '.hbs', partials: true },
+        },
+      }),
+    }),
     UserModule,
     AuthModule,
     RedisModule,
@@ -78,6 +114,7 @@ import { Wxmp as WxmpModule } from './modules/wxmp/wxmp.module';
     OssModule,
     TaskModule,
     WxmpModule,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [
@@ -91,4 +128,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
+
+  constructor() {}
 }
