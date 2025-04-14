@@ -12,5 +12,5 @@ export class NewAddJueJinUserDto {
 
   @IsNotEmpty({ message: "'status' is required" })
   @IsNumber({}, { message: "'status' must be number type" })
-  readonly status: number;Ï
+  readonly status: number;
 }
