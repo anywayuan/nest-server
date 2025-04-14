@@ -13,33 +13,6 @@ const juejin: JuejinAutoSignParams = {
     'User-Agent':
       'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
   },
-  sessionids: [
-    {
-      name: '亮',
-      sessionid: '7dd5e3dcf708b7b88c382af9b12573cd',
-      email: 'yoankissing@gmail.com',
-    },
-    {
-      name: '强',
-      sessionid: '21883a4db9073ac9c0381803c8ebfffe',
-      email: '1323621305@qq.com',
-    },
-    {
-      name: '龙哥',
-      sessionid: 'd979b9cc3425cf4b0dba3c664b9fd0a6',
-      email: '2684352533@qq.com',
-    },
-    {
-      name: '星星',
-      sessionid: 'c1c9e12724c755785be3aaa53a5a9cb3',
-      email: '1369025982@qq.com',
-    },
-    {
-      name: '喜喜',
-      sessionid: '7c727a6a27f435dfd049f6468abd7963',
-      email: '2622537098@qq.com',
-    },
-  ],
 };
 
 // 必应

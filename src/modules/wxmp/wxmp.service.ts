@@ -90,7 +90,6 @@ export class WxmpService {
 
   /** 查询全部分类-前台展示 */
   async getFrontAlbumList(params: QueryAllAlbum): Promise<AlbumRes> {
-    console.log(params);
     const { page = 1, page_size = 10 } = params;
     const qb = this.albumsRepository.createQueryBuilder('albums');
     qb.where('1 = 1');

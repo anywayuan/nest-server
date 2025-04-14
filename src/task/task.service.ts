@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import * as fs from 'fs';
-import { juejin, bing } from '../../config/autoScriptConf';
 import * as dayjs from 'dayjs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { juejin, bing } from '../../config/autoScriptConf';
 import { shuffleArray } from '../utils';
 import { EmailService } from '../email/email.service';
+import { JueJinUserEntity } from './entity/juejinUser.entity';
+import { NewAddJueJinUserDto } from './dto/juejin-user.dto';
 
 @Injectable()
 export class ScheduleService {
   constructor(
+    @InjectRepository(JueJinUserEntity)
+    private readonly juejinUserRepository: Repository<JueJinUserEntity>,
     private readonly httpService: HttpService,
     private readonly emailService: EmailService,
   ) {}
@@ -38,7 +45,7 @@ export class ScheduleService {
 
   /** @description: 掘金自动签到 */
   async AutoSignToJJ() {
-    const { sessionids, url, baseHeaders } = juejin;
+    const { url, baseHeaders } = juejin;
     const options = {
       url,
       method: 'post',
@@ -50,17 +57,21 @@ export class ScheduleService {
       },
     };
 
-    const shuffled = shuffleArray(sessionids);
+    const { list } = await this.findUsers();
+    const shuffled = shuffleArray(list);
     const results = [];
     await shuffled.reduce(async (prevPromise, item, index) => {
       await prevPromise;
+
       if (index > 0) {
         await new Promise((resolve) => setTimeout(resolve, 60000));
       }
-      options.headers.cookie = `sessionid=${item.sessionid}`;
+
+      options.headers.cookie = `sessionid=${item.session_id}`;
       const res = await firstValueFrom(this.httpService.request(options));
+
       const obj = {
-        name: item.name,
+        name: item.nickname,
         data: {
           err_no: res.data.err_no,
           err_msg: res.data.err_msg,
@@ -70,21 +81,64 @@ export class ScheduleService {
         signInTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       };
       results.push(obj);
+
       await this.emailService.sendExecutionResult(
         JSON.stringify(obj, null, 2),
         {
           to: item.email,
-          isError: res.data.err_no === 0 ? false : true,
+          isError: res.data.err_no !== 0,
         },
       );
+
       return Promise.resolve();
     }, Promise.resolve());
 
-    console.log('本次任务执行结果: ', results);
+    console.log('本次任务执行结果:\n', results);
 
-    return {
-      juejin: results,
-    };
+    return { juejin: results };
+  }
+
+  /** @description: 获取所有可签到用户 */
+  async findUsers(): Promise<{ list: JueJinUserEntity[]; total: number }> {
+    const qb = this.juejinUserRepository.createQueryBuilder('juejin_users');
+    qb.where('1 = 1');
+    qb.where('status = 1');
+
+    const [list, total] = await qb.getManyAndCount();
+    return { list, total };
+  }
+
+  /** @description: 新增掘金用户 */
+  async addUser(user: NewAddJueJinUserDto) {
+    const { session_id } = user;
+    const existUser = await this.juejinUserRepository.findOne({
+      where: { session_id },
+    });
+
+    if (existUser) {
+      throw new HttpException('该用户已存在', HttpStatus.CONFLICT);
+    }
+
+    const newUser = this.juejinUserRepository.create({
+      ...user,
+      creation_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      update_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    });
+    return await this.juejinUserRepository.save(newUser);
+  }
+
+  /** @description: 更新掘金用户 */
+  async updateUser(id: string, user: NewAddJueJinUserDto) {
+    const res = await this.juejinUserRepository
+      .createQueryBuilder()
+      .update(JueJinUserEntity)
+      .set({ ...user, update_time: dayjs().format('YYYY-MM-DD HH:mm:ss') })
+      .where('id = :id', { id })
+      .execute();
+
+    if (res.affected === 1) return {};
+
+    throw new HttpException('更新失败', HttpStatus.BAD_REQUEST);
   }
 
   /** @description: 必应壁纸每日下载 */

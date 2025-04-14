@@ -1,13 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { EmailService } from './email.service';
-import { Public } from 'src/global/decorator/public.decorator';
 
 @Controller('email')
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
   @Get()
-  @Public()
   async emailTest() {
     return await this.emailService.sendExecutionResult(
       JSON.stringify(
