@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -290,17 +296,41 @@ export class WxmpService {
   /** 管理分类下图片-新增 */
   async addPhoto(postData: AddPhoto) {
     const { pid, url, key } = postData;
+    const now = new Date();
+    // 过滤空值并去重
+    const keys = [...new Set(key.split(',').filter((k) => k.trim()))];
+    const urls = [...new Set(url.split(',').filter((u) => u.trim()))];
 
-    const newPhoto = this.photoRepository.create({
-      pid,
-      url,
-      key,
-      create_time: new Date(),
-      update_time: new Date(),
-    });
-    await this.photoRepository.save(newPhoto);
+    if (keys.length === 0 || urls.length === 0) {
+      throw new BadRequestException('至少需要提供一个有效的key和url');
+    }
 
-    return {};
+    const records = [];
+
+    // 统一处理逻辑：所有key都进行匹配检查
+    for (const currentKey of keys) {
+      for (const currentUrl of urls) {
+        if (currentUrl.includes(currentKey)) {
+          records.push({
+            pid,
+            key: currentKey,
+            url: currentUrl,
+            create_time: now,
+            update_time: now,
+          });
+        }
+      }
+    }
+
+    if (records.length === 0) {
+      throw new NotFoundException('未找到匹配的key和url组合');
+    }
+
+    // 批量创建并保存
+    const photos = this.photoRepository.create(records);
+    await this.photoRepository.save(photos);
+
+    return { count: photos.length }; // 返回插入数量便于客户端确认
   }
 
   /**

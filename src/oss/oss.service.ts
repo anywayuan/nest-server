@@ -151,7 +151,7 @@ export class OssService {
   }
 
   /** 批量上传 */
-  async uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
+  uploadFiles(@UploadedFiles() files: Array<Express.Multer.File>) {
     const cosFiles: Array<CosFileItem> = [];
 
     files.forEach((file) => {
@@ -167,24 +167,27 @@ export class OssService {
       cosFiles.push(cosFilesConf);
     });
 
-    this.cos.uploadFiles({
-      files: cosFiles,
-      SliceSize: 1024 * 1024 * 10, // 设置大于10MB采用分块上传
-      onProgress: function (info) {
-        const percent = parseInt(String(info.percent * 10000)) / 100;
-        const speed = parseInt(String((info.speed / 1024 / 1024) * 100)) / 100;
-        console.log('进度：' + percent + '%; 速度：' + speed + 'Mb/s;');
-      },
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      onFileFinish: function (
-        err: CosError,
-        data: Record<string, any>,
-        options: { Key: string },
-      ) {
-        console.log(options.Key + '上传' + (err ? '失败' : '完成'));
-      },
-    });
+    this.cos
+      .uploadFiles({
+        files: cosFiles,
+        SliceSize: 1024 * 1024 * 10, // 设置大于10MB采用分块上传
+        onProgress: function (info) {
+          const percent = parseInt(String(info.percent * 10000)) / 100;
+          const speed =
+            parseInt(String((info.speed / 1024 / 1024) * 100)) / 100;
+          console.log('进度：' + percent + '%; 速度：' + speed + 'Mb/s;');
+        },
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        onFileFinish: function (
+          err: CosError,
+          data: Record<string, any>,
+          options: { Key: string },
+        ) {
+          console.log(options.Key + '上传' + (err ? '失败' : '完成'));
+        },
+      })
+      .then(() => {});
 
     const COSFS_RESOURCES_URL: string = this.configService.get<string>(
       'COSFS_RESOURCES_URL',
