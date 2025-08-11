@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 
 import { juejin, bing } from '../../config/autoScriptConf';
 import { shuffleArray } from '../utils';
-import { EmailService } from '../email/email.service';
+// import { EmailService } from '../email/email.service';
 import { JueJinUserEntity } from './entity/juejinUser.entity';
 import { NewAddJueJinUserDto } from './dto/juejin-user.dto';
 
@@ -19,7 +19,7 @@ export class ScheduleService {
     @InjectRepository(JueJinUserEntity)
     private readonly juejinUserRepository: Repository<JueJinUserEntity>,
     private readonly httpService: HttpService,
-    private readonly emailService: EmailService,
+    // private readonly emailService: EmailService,
   ) {}
 
   @Cron('0 0 6 * * *')
@@ -60,12 +60,12 @@ export class ScheduleService {
     const { list } = await this.findUsers();
     const shuffled = shuffleArray(list);
     const results = [];
-    await shuffled.reduce(async (prevPromise, item, index) => {
+    await shuffled.reduce(async (prevPromise, item) => {
       await prevPromise;
 
-      if (index > 0) {
-        await new Promise((resolve) => setTimeout(resolve, 60000));
-      }
+      // if (index > 0) {
+      //   await new Promise((resolve) => setTimeout(resolve, 60000));
+      // }
 
       options.headers.cookie = `sessionid=${item.session_id}`;
       const res = await firstValueFrom(this.httpService.request(options));
@@ -78,17 +78,17 @@ export class ScheduleService {
           incr_point: res.data.data?.incr_point,
           sum_point: res.data.data?.sum_point,
         },
-        signInTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        sign_in_time: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       };
       results.push(obj);
 
-      await this.emailService.sendExecutionResult(
-        JSON.stringify(obj, null, 2),
-        {
-          to: item.email,
-          isError: res.data.err_no !== 0,
-        },
-      );
+      // await this.emailService.sendExecutionResult(
+      //   JSON.stringify(obj, null, 2),
+      //   {
+      //     to: item.email,
+      //     isError: res.data.err_no !== 0,
+      //   },
+      // );
 
       return Promise.resolve();
     }, Promise.resolve());
